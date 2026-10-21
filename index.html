@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta id="meta-color-scheme" name="color-scheme" content="light">
+<title>LokerBaraya - Portal Loker Bandung Raya</title>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-12TF2Y8PS0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-12TF2Y8PS0');
+    </script>
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2225%22 fill=%22%232563eb%22/><text x=%2250%%22 y=%2254%%22 font-size=%2255%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23FFFFFF%22 font-family=%22sans-serif%22 font-weight=%22bold%22>💼</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- TESSERACT.JS UNTUK FITUR OCR -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<!-- FIREBASE SDK COMPAT -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBM-oD34UZQujh07voxjRhuRrJwANOPJCg",
+    authDomain: "lokerbaraya.firebaseapp.com",
+    projectId: "lokerbaraya",
+    storageBucket: "lokerbaraya.firebasestorage.app",
+    messagingSenderId: "625779109352",
+    appId: "1:625779109352:web:28d705525f2f7e50ee485d"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const fbAuth = firebase.auth();
+  const fbDb = firebase.firestore();
+</script>
+
+<style>
+:root{
+    --primary:#2563eb;
+    --primary-hover:#1d4ed8;
+    --dark:#1e293b;
+    --accent:#0ea5e9;
+    --bg:#f8fafc;
+    --card:#ffffff;
+    --card-hover:#f1f5f9;
+    --text:#0f172a;
+    --muted:#64748b;
+    --border:#e2e8f0;
+    --rad:18px;
+    --shadow:0 10px 30px -5px rgba(37,99,235,0.08), 0 8px 10px -6px rgba(0,0,0,0.02);
+}
+
+[data-theme="dark"]{
+    --primary:#38bdf8;
+    --primary-hover:#0ea5e9;
+    --dark:#0f172a;
+    --accent:#7dd3fc;
+    --bg:#030712;
+    --card:#0f172a;
+    --card-hover:#1e293b;
+    --text:#f8fafc;
+    --muted:#94a3b8;
+    --border:#1e293b;
+    --shadow:0 10px 30px -5px rgba(0,0,0,0.5);
+}
+
+[data-theme="dark"] .premium{background:linear-gradient(135deg, #0f172a, #1e293b)!important;border-color:#38bdf8!important;}
+[data-theme="dark"] .grid{background:#0f172a!important}
+[data-theme="dark"] .footer-content{background:#0f172a; border-color:var(--border);}
+
+html, body {
+    margin: 0; padding: 0; width: 100%; max-width: 100%; overflow-x: hidden;
+    background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: background .3s, color .3s; box-sizing: border-box;
+}
+
+*, *:before, *:after { box-sizing: inherit; }
+body{ padding-bottom: 110px; }
+button,input,select,textarea{outline:none;border:none;font-family:inherit}
+
+.rd{display:none}
+.sec{display:none;padding:1.5rem 1rem 3rem 1rem;max-width:1100px;margin:0 auto;animation:fade .3s; box-sizing: border-box; width: 100%;}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* PENGATURAN DISPLAY SECTION HALAMAN */
+body[data-active-sec="home"] #p-home, 
+body[data-active-sec="lok"] #p-lok, 
+body[data-active-sec="map"] #p-map, 
+body[data-active-sec="webpt"] #p-webpt,
+body[data-active-sec="tips"] #p-tips,
+body[data-active-sec="cv"] #p-cv,
+body[data-active-sec="prof"] #p-prof, 
+body[data-active-sec="adm"] #p-adm { display: block; }
+
+body[data-active-sec="home"] .bnav .l-home, 
+body[data-active-sec="lok"] .bnav .l-lok, 
+body[data-active-sec="map"] .bnav .l-map, 
+body[data-active-sec="webpt"] .bnav .l-web,
+body[data-active-sec="tips"] .bnav .l-tips,
+body[data-active-sec="cv"] .bnav .l-cv, 
+body[data-active-sec="prof"] .bnav .l-prof { color: var(--primary); font-weight: 800; }
+
+.welcome-overlay {position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.8);display:flex;justify-content:center;align-items:center;z-index:99999;padding:1rem;box-sizing:border-box;backdrop-filter:blur(6px);animation:fadeInOverlay .4s ease;}
+@keyframes fadeInOverlay{from{opacity:0;}to{opacity:1;}}
+.welcome-box {background:var(--card);border:1px solid var(--border);border-radius:24px;width:100%;max-width:340px;padding:2rem 1.25rem;text-align:center;box-shadow:0 20px 50px rgba(37,99,235,0.25);position:relative;margin:auto;box-sizing:border-box;animation:bounceInPopup .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);}
+@keyframes bounceInPopup{0%{opacity:0;transform:scale(0.8) translateY(20px);}70%{opacity:1;transform:scale(1.03) translateY(-5px);}100%{opacity:1;transform:scale(1) translateY(0);}}
+.welcome-icon-circle {width:70px;height:70px;background:rgba(37,99,235,0.1);border:2px solid #2563eb;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem auto;color:var(--primary);font-size:1.8rem;animation:pulseIcon 2s infinite;}
+@keyframes pulseIcon{0%{box-shadow:0 0 0 0 rgba(37,99,235,0.4);}70%{box-shadow:0 0 0 12px rgba(37,99,235,0);}}
+.welcome-box h2 {font-size:1.25rem;font-weight:800;color:var(--text);margin-bottom:0.75rem;line-height:1.4;}
+.welcome-box p {font-size:0.82rem;color:var(--muted);line-height:1.5;margin-bottom:1.25rem;font-weight:600;}
+
+.btn-welcome-wa {background:#10b981;color:#fff;width:100%;padding:11px;border-radius:12px;font-weight:700;font-size:0.85rem;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;box-shadow:0 4px 15px rgba(16,185,129,0.3);margin-bottom:8px;transition:transform .2s; box-sizing: border-box;}
+.welcome-social-row {display: flex; gap: 8px; margin-bottom: 8px;}
+.btn-welcome-soc {flex: 1; padding: 10px; border-radius: 12px; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform .2s; box-sizing: border-box;}
+.btn-welcome-tiktok {background: #000000;}
+.btn-welcome-ig {background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);}
+.btn-welcome-start {background:linear-gradient(135deg, #2563eb, #1d4ed8);color:#fff;width:100%;padding:11px;border-radius:12px;font-weight:700;font-size:0.85rem;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 4px 15px rgba(37,99,235,0.3);transition:transform .2s; box-sizing: border-box;}
+.btn-welcome-start:active, .btn-welcome-wa:active, .btn-welcome-soc:active {transform:scale(0.97);}
+
+.mod-ov{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.65);display:none;justify-content:center;align-items:center;z-index:999999;padding:1rem;box-sizing:border-box;backdrop-filter:blur(4px); overflow-y: auto;}
+#m-post:checked ~ #mod-post,#m-pro:checked ~ #mod-pro,#m-det:checked ~ #mod-det,#m-apply:checked ~ #mod-apply,#m-preview:checked ~ #mod-preview,#m-note:checked ~ #mod-note,#m-loc:checked ~ #mod-loc,#m-type:checked ~ #mod-type,#m-sort:checked ~ #mod-sort,#m-map-hub:checked ~ #mod-map-hub,#m-about:checked ~ #mod-about,#m-privacy:checked ~ #mod-privacy,#m-help:checked ~ #mod-help,#m-auth:checked ~ #mod-auth,#m-adm-webpt:checked ~ #mod-adm-webpt{display:flex}
+
+header{background:var(--card);padding:0.75rem 1rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,0.05);position:sticky;top:0;left:0;width:100%;max-width:100vw;z-index:9999;border-bottom:1px solid var(--border);box-sizing:border-box;margin-top:0;}
+.logo-container {display: flex; align-items: center; gap: 8px; cursor: pointer; min-width: 0;}
+.logo-icon-box {width: 36px; height: 36px; background: linear-gradient(135deg, #2563eb, #0ea5e9); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1rem; box-shadow: 0 4px 12px rgba(37,99,235,0.3); flex-shrink: 0;}
+.logo-text-group {display: flex; flex-direction: column; min-width: 0;}
+.logo-main-text {font-size: 1.15rem; font-weight: 800; color: var(--primary); line-height: 1.1; letter-spacing: 0.3px; white-space: nowrap;}
+.logo-main-text span {color: var(--text);}
+.logo-sub-text {font-size: 0.6rem; color: var(--muted); font-style: italic; font-weight: 700; letter-spacing: 0.3px; white-space: nowrap;}
+.hdr-right{display:flex;align-items:center;gap:8px; flex-shrink: 0;}
+.btn-dark{background:var(--border);color:var(--text);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.95rem;border:1px solid var(--border); flex-shrink: 0;}
+.btn-adm{background:linear-gradient(135deg, #2563eb, #1d4ed8);color:#fff;padding:6px 12px;border-radius:18px;font-weight:800;font-size:0.8rem;cursor:pointer;display:inline-block;box-shadow:0 3px 10px rgba(37,99,235,0.25); white-space: nowrap;}
+
+.hero{background:linear-gradient(135deg, #eff6ff, #e0f2fe);border:1px solid #bae6fd;padding:2rem 1.2rem;text-align:center;color:#0369a1;border-radius:var(--rad);margin-bottom:1rem;box-shadow:var(--shadow);position:relative;overflow:hidden;margin-top: 0.5rem; box-sizing: border-box; width: 100%;}
+[data-theme="dark"] .hero{background:linear-gradient(135deg, #0f172a, #1e293b);border-color:var(--border);color:#fff;}
+.hero::before{content:'';position:absolute;top:0;left:0;width:100%;height:4px;background:linear-gradient(90deg, #2563eb, #0ea5e9, #2563eb);}
+.hero h1{font-size:1.5rem;margin-bottom:.4rem;color:#1e293b;font-weight:800;letter-spacing:0.3px;}
+[data-theme="dark"] .hero h1{color:var(--primary);}
+.hero p{font-size:0.85rem;color:#475569;margin-bottom:1rem;font-weight:600;}
+[data-theme="dark"] .hero p{color:var(--muted);}
+.hero-badges{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;}
+.hero-badge-item{background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);color:#1d4ed8;padding:5px 12px;border-radius:20px;font-size:0.72rem;font-weight:700;display:inline-flex;align-items:center;gap:5px;}
+[data-theme="dark"] .hero-badge-item{background:rgba(56,189,248,0.15);border-color:rgba(56,189,248,0.4);color:#7dd3fc;}
+
+.public-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.2rem; width: 100%; box-sizing: border-box; }
+.stat-card-pub { background: var(--card); border: 1px solid var(--border); border-radius: var(--rad); padding: 12px 8px; text-align: center; box-shadow: var(--shadow); box-sizing: border-box; }
+.stat-card-pub i { font-size: 1.3rem; color: var(--primary); margin-bottom: 4px; }
+.stat-card-pub h3 { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+.stat-card-pub p { font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; margin: 0; }
+
+.wa-links-container { display: flex; gap: 10px; margin-bottom: 1rem; width: 100%; box-sizing: border-box; }
+.btn-wa-group, .btn-wa-channel { flex: 1; padding: 11px 12px; border-radius: 14px; font-size: 0.8rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.06); transition: transform 0.2s; white-space: nowrap; box-sizing: border-box; }
+.btn-wa-group:active, .btn-wa-channel:active { transform: scale(0.97); }
+.btn-wa-group { background: #10b981; }
+.btn-wa-channel { background: #2563eb; }
+
+.sub-box { background: var(--card); border: 2px dashed #10b981; padding: 1.2rem; border-radius: var(--rad); margin-bottom: 1.2rem; box-shadow: var(--shadow); text-align: center; box-sizing: border-box; width: 100%; }
+.sub-box h3 { font-size: 1rem; font-weight: 800; color: #10b981; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.sub-box p { font-size: 0.78rem; color: var(--muted); margin-bottom: 12px; font-weight: 600; }
+.sub-input-row { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+.sub-input-row input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.85rem; font-weight: 600; box-sizing: border-box; }
+.btn-sub { background: #10b981; color: #fff; width: 100%; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 3px 10px rgba(16,185,129,0.3); box-sizing: border-box; }
+.btn-sub:active { transform: scale(0.97); }
+
+.search-container { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: var(--rad); box-shadow: var(--shadow); margin-bottom: 1.2rem; box-sizing: border-box; width: 100%; }
+.search-box-row1 { display: flex; gap: 8px; margin-bottom: 8px; width: 100%; box-sizing: border-box; }
+.search-box-row2 { display: flex; gap: 8px; margin-bottom: 8px; width: 100%; box-sizing: border-box; }
+.search-box-row3 { display: flex; width: 100%; box-sizing: border-box; }
+.search-container input { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.82rem; font-weight: 600; flex: 2; box-sizing: border-box; min-width: 0; }
+
+.custom-sel-btn { flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.82rem; font-weight: 600; display:flex; justify-content:space-between; align-items:center; cursor:pointer; transition:0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-sizing: border-box; min-width: 0; }
+.custom-sel-btn:active { transform: scale(0.98); }
+.btn-map-hub { width: 100%; padding: 11px; border-radius: 10px; background: linear-gradient(135deg, #0ea5e9, #2563eb); color: #fff; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 3px 10px rgba(14,165,233,0.3); box-sizing: border-box; }
+.btn-map-hub:active { transform: scale(0.97); }
+
+.opt-item { padding: 14px 12px; border-bottom: 1px solid var(--border); font-size: 0.9rem; font-weight: 600; cursor: pointer; display:flex; align-items:center; gap:10px; color:var(--text); transition: background 0.2s;}
+.opt-item:last-child { border-bottom: none; }
+.opt-item:hover { background: var(--card-hover); color: var(--primary); }
+.opt-item i { color: var(--primary); width: 20px; text-align: center; }
+
+.jobs-grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-content: start; width: 100%; box-sizing: border-box; }
+@media (max-width: 768px) { .jobs-grid-container { grid-template-columns: 1fr; } }
+
+.card{background:var(--card);padding:1.2rem;border-radius:var(--rad);box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:0;position:relative;cursor:pointer;transition:.2s; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; width: 100%; max-width: 100%; overflow: hidden;}
+.card:hover{border-color:var(--primary);background:var(--card-hover);transform:translateY(-2px);}
+.card:active{transform:scale(.98)}
+.card h3{color:var(--text);font-size:1.05rem;font-weight:800; line-height: 1.3; word-break: break-word; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;}
+.card .pt{color:var(--primary);font-weight:700;font-size:0.9rem;margin-bottom:6px; word-break: break-word;}
+.card-highlights {display: flex;gap: 6px;flex-wrap: wrap;margin: 8px 0 10px 0;}
+.highlight-tag {background: rgba(37,99,235,0.06);border: 1px solid rgba(37,99,235,0.15);color: var(--text);padding: 4px 8px;border-radius: 8px;font-size: 0.7rem;font-weight: 700;display: inline-flex;align-items: center;gap: 4px; max-width: 100%; overflow: hidden; text-overflow: ellipsis;}
+[data-theme="dark"] .highlight-tag {background: rgba(56,189,248,0.1);border-color: rgba(56,189,248,0.25);}
+
+.card-actions-mobile {display: flex; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); overflow-x: auto; white-space: nowrap; width: 100%; max-width: 100%; box-sizing: border-box; -webkit-overflow-scrolling: touch; scrollbar-width: thin;}
+.card-actions-mobile::-webkit-scrollbar { height: 4px; }
+.card-actions-mobile::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.link-det{display:inline-block;font-size:0.78rem;color:var(--primary);font-weight:700;text-decoration:underline;cursor:pointer;}
+.status-badge-row {display: flex;align-items: center;gap: 6px;flex-wrap: wrap;margin-bottom: 6px;}
+.badge-status.open { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); padding: 3px 8px; border-radius: 8px; font-size: 0.68rem; font-weight: 700; display: inline-flex; align-items: center; white-space: nowrap;}
+.badge-status.closed { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); padding: 3px 8px; border-radius: 8px; font-size: 0.68rem; font-weight: 700; display: inline-flex; align-items: center; white-space: nowrap;}
+.badge-deadline { font-size: 0.68rem; font-weight: 700; color: #f59e0b; background: rgba(245,158,11,0.1); padding: 3px 8px; border-radius: 8px; border: 1px solid rgba(245,158,11,0.2); display: inline-flex; align-items: center; white-space: nowrap;}
+.badge-deadline.expired { color: #ef4444; background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.2); }
+.badge-deadline.urgent { color: #ef4444; background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); animation: pulseUrgent 1.5s infinite; }
+@keyframes pulseUrgent { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+.badge-fresh { background: linear-gradient(135deg, #2563eb, #0ea5e9); color: #fff; padding: 2px 7px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; margin-left: 4px; vertical-align: middle; display: inline-block; box-shadow: 0 2px 6px rgba(37,99,235,0.3); white-space: nowrap;}
+.badge-apply-counter { background: rgba(14, 165, 233, 0.12); color: var(--accent); border: 1px solid rgba(14, 165, 233, 0.3); padding: 3px 8px; border-radius: 8px; font-size: 0.68rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+
+.btn-w{background:#10b981;color:#fff;padding:6px 10px;border-radius:8px;font-weight:700;font-size:0.75rem;cursor:pointer;display:inline-flex;align-items:center;gap:4px;box-shadow:0 2px 8px rgba(16,185,129,0.2); flex-shrink: 0;}
+.btn-e{background:#ef4444;color:#fff;padding:6px 10px;border-radius:8px;font-weight:700;font-size:0.75rem;cursor:pointer;display:inline-flex;align-items:center;gap:4px;box-shadow:0 2px 8px rgba(239,68,68,0.2); flex-shrink: 0;}
+.btn-m{background:#1e293b;color:#fff;padding:6px 10px;border-radius:8px;font-weight:700;font-size:0.75rem;cursor:pointer;display:inline-flex;align-items:center;gap:4px; flex-shrink: 0;}
+.btn-sh{background:#2563eb;color:#fff;padding:6px 10px;border-radius:8px;font-weight:700;font-size:0.75rem;cursor:pointer;display:inline-flex;align-items:center;gap:4px;box-shadow:0 2px 8px rgba(37,99,235,0.2); flex-shrink: 0;}
+.btn-copy{background:#7c3aed;color:#fff;padding:6px 10px;border-radius:8px;font-weight:700;font-size:0.75rem;cursor:pointer;display:inline-flex;align-items:center;gap:4px;box-shadow:0 2px 8px rgba(124,58,237,0.2); flex-shrink: 0;}
+.btn-rev{background:var(--border);color:var(--text);border:1px solid var(--border);padding:8px 12px;border-radius:10px;font-weight:700;font-size:0.81rem;cursor:pointer}
+.btn-dl{background:var(--primary);color:#fff;padding:10px 14px;border-radius:10px;font-weight:800;font-size:0.81rem;cursor:pointer;display:inline-flex;align-items:center;gap:5px;box-shadow:0 3px 10px rgba(37,99,235,0.3)}
+.btn-p{background:linear-gradient(135deg, #2563eb, #1d4ed8);color:#fff;padding:10px 18px;border-radius:12px;font-weight:800;font-size:0.85rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px;box-shadow:0 4px 12px rgba(37,99,235,0.3)}
+.btn-apply{background:linear-gradient(135deg, #2563eb, #1d4ed8);color:#fff;padding:12px 16px;border-radius:14px;font-weight:800;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;box-shadow:0 4px 15px rgba(37,99,235,0.35); border: none; outline: none; transition: 0.3s; box-sizing: border-box;}
+.btn-apply:disabled { background: #94a3b8; box-shadow: none; cursor: not-allowed; opacity: 0.8; }
+.btn-note { background: #f59e0b; color: #fff; padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 0.75rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 8px rgba(245,158,11,0.2); }
+
+.admin-only { display: none !important; } body.admin-mode .admin-only { display: inline-flex !important; }
+.admin-only-flex { display: none !important; } body.admin-mode .admin-only-flex { display: flex !important; }
+.admin-only-block { display: none !important; } body.admin-mode .admin-only-block { display: block !important; }
+.btn-del-job{background:#ef4444;color:#fff;padding:6px 10px;border-radius:8px;font-weight:700;font-size:0.75rem;cursor:pointer;align-items:center;gap:4px; flex-shrink: 0;}
+.btn-edit-job{background:var(--primary);color:#fff;padding:6px 10px;border-radius:8px;font-weight:800;font-size:0.75rem;cursor:pointer;align-items:center;gap:4px; flex-shrink: 0;}
+
+.bm{position:absolute;top:1rem;right:1rem;background:none;font-size:1.2rem;color:var(--muted);cursor:pointer;padding:4px}
+.bm.saved {color:var(--primary);}
+.badge-prem{background:linear-gradient(135deg, #2563eb, #0ea5e9);color:#fff;padding:2px 7px;border-radius:8px;font-size:0.65rem;font-weight:800;margin-left:4px;vertical-align:middle;display:inline-block;box-shadow:0 2px 6px rgba(37,99,235,0.3); white-space: nowrap;}
+.verif{color:var(--primary);margin-left:4px;font-size:0.85rem}
+
+.bnav{position:fixed;bottom:0;left:0;width:100%;max-width:100vw;background:var(--card);box-shadow:0 -6px 25px rgba(0,0,0,0.06);display:flex;justify-content:space-around;padding:10px 0;z-index:2000;border-top:1px solid var(--border); box-sizing: border-box;}
+.bnav div, .bnav label{display:flex;flex-direction:column;align-items:center;color:var(--muted);font-size:0.7rem;cursor:pointer;width:16.66%;font-weight:700; background:none; border:none;}
+.bnav div i, .bnav label i{font-size:1.2rem;margin-bottom:3px}
+
+.mbox{background:var(--card);color:var(--text);padding:1.5rem;border-radius:var(--rad);width:100%;max-width:380px;position:relative;max-height:85vh;overflow-y:auto;box-shadow:0 20px 40px rgba(0,0,0,0.15);border:1px solid var(--border); box-sizing: border-box; margin: auto;}
+.cx{position:absolute;top:1rem;right:1rem;font-size:1.2rem;color:var(--muted);cursor:pointer;padding:5px}
+.fg{margin-bottom:1rem;text-align:left}
+.fg label{display:block;font-size:0.85rem;color:var(--muted);margin-bottom:6px;font-weight:700;}
+.fg input,.fg select,.fg textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--bg);color:var(--text);font-size:0.9rem;font-weight:600; box-sizing: border-box;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.table-responsive-box { width: 100%; overflow-x: auto; box-sizing: border-box; }
+.tb{width:100%;min-width:550px;border-collapse:collapse;font-size:0.8rem;margin-top:10px; box-sizing: border-box;}
+.tb th,.tb td{padding:10px 8px;text-align:left;border-bottom:1px solid var(--border);word-break:break-word;overflow-wrap:break-word;box-sizing:border-box;}
+
+.profile-banner {height: 115px; background: linear-gradient(135deg, #eff6ff, #e0f2fe); border-bottom: 3px solid var(--primary); position: relative; border-radius: var(--rad) var(--rad) 0 0;}
+[data-theme="dark"] .profile-banner {background: linear-gradient(135deg, #0f172a, #1e293b);}
+.profile-edit-btn {position: absolute; top: 12px; right: 12px; color: #fff; background: var(--primary); padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 3px 10px rgba(37,99,235,0.3);}
+.profile-avatar-container {display: flex; justify-content: center; margin-top: -45px; position: relative; z-index: 2;}
+.ava {width: 90px; height: 90px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; border: 4px solid var(--card); box-shadow: 0 4px 15px rgba(0,0,0,0.1); background-size: cover; background-position: center;}
+
+.ocr-box {background:var(--bg); padding:12px; border-radius:14px; margin-bottom:15px; border:2px dashed var(--primary); width: 100%; box-sizing: border-box; overflow: hidden;}
+.ocr-box input[type="file"] { width: 100%; max-width: 100%; box-sizing: border-box; padding: 6px; font-size: 0.78rem; background: var(--card); border: 1px solid var(--border); border-radius: 8px; }
+
+.pagination { display: flex; justify-content: center; gap: 8px; margin-top: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+.page-btn { padding: 8px 14px; border: 1px solid var(--border); background: var(--card); border-radius: 10px; cursor: pointer; color: var(--text); font-weight: 700; font-size: 0.85rem; transition: 0.2s; }
+.page-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 800; box-shadow: 0 2px 8px rgba(37,99,235,0.3); }
+
+.app-footer { text-align: center; padding: 2rem 0.5rem 1rem 0.5rem; color: var(--muted); font-size: 0.8rem; display: none; }
+body[data-active-sec="home"] .app-footer { display: block; }
+.footer-content { background: var(--card); padding: 1.25rem 1rem; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 1rem; box-shadow: var(--shadow); }
+.footer-brand { font-size: 1.3rem; font-weight: 800; color: var(--primary); margin-bottom: 6px; letter-spacing: 0.3px; }
+.footer-brand span { color: var(--text); }
+.footer-content p { font-size: 0.78rem; margin-bottom: 12px; line-height: 1.5; font-weight: 600; }
+.footer-social-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 12px; }
+.footer-soc-btn { padding: 8px 14px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; text-decoration: none; color: #fff; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.footer-tiktok { background: #000000; }
+.footer-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+.footer-links { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 6px 10px; font-size: 0.75rem; font-weight: 700; color: var(--muted); margin-bottom: 12px; }
+.footer-links span { color: var(--primary); text-decoration: none; cursor: pointer; white-space: nowrap; }
+.footer-bottom { font-size: 0.72rem; font-weight: 600; margin-bottom: 1rem; }
+
+#toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--card); color: var(--text); padding: 12px 22px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.12); border: 1px solid var(--primary); z-index: 9999999; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 10px; transition: transform 0.3s ease; }
+#toast.show { transform: translateX(-50%) translateY(0); }
+#toast i { color: var(--primary); font-size: 1.1rem; }
+
+.admin-stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.2rem; width: 100%; box-sizing: border-box; }
+.admin-stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--rad); padding: 12px 10px; text-align: center; box-shadow: var(--shadow); box-sizing: border-box; }
+.admin-stat-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 2px; line-height: 1.2; }
+.admin-stat-card p { font-size: 0.7rem; font-weight: 700; color: var(--muted); text-transform: uppercase; margin: 0; }
+
+.baraya-ai-fab { position: fixed; bottom: 90px; right: 20px; width: 55px; height: 55px; background: linear-gradient(135deg, #2563eb, #0ea5e9); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; box-shadow: 0 8px 25px rgba(37,99,235,0.4); z-index: 99998; transition: transform 0.3s; border: 2px solid #fff; }
+.baraya-ai-fab:hover { transform: scale(1.1); }
+.baraya-ai-container { position: fixed; bottom: 90px; right: 20px; width: 360px; max-width: calc(100vw - 40px); height: 480px; max-height: calc(100vh - 150px); background: var(--card); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); display: none; flex-direction: column; z-index: 99999; overflow: hidden; animation: fadeInUpChat 0.3s ease; }
+@keyframes fadeInUpChat { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.baraya-ai-header { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; }
+.baraya-ai-header h3 { font-size: 0.95rem; font-weight: 800; margin: 0; display: flex; align-items: center; gap: 8px; }
+.baraya-ai-close { background: none; border: none; color: #fff; font-size: 1.1rem; cursor: pointer; }
+.baraya-ai-body { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: var(--bg); font-size: 0.82rem; }
+.ai-msg { max-width: 85%; padding: 10px 14px; border-radius: 14px; line-height: 1.5; word-break: break-word; font-weight: 600; }
+.ai-msg.bot { background: var(--card); color: var(--text); border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 4px; }
+.ai-msg.user { background: var(--primary); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+.baraya-ai-footer { padding: 10px; background: var(--card); border-top: 1px solid var(--border); display: flex; gap: 8px; }
+.baraya-ai-footer input { flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.82rem; }
+.baraya-ai-footer button { background: var(--primary); color: #fff; padding: 0 14px; border-radius: 10px; cursor: pointer; font-weight: 700; }
+</style>
+</head>
+<body data-active-sec="home">
+
+<!-- POP-UP SELAMAT DATANG -->
+<div id="welcomePopup" class="welcome-overlay">
+    <div class="welcome-box">
+        <div class="welcome-icon-circle"><i class="fas fa-fire"></i></div>
+        <h2>✨ Halo Pejuang Kerja! ✨</h2>
+        <p id="randomWelcomeText">Memuat curhatan hari ini...</p>
+        <a href="https://chat.whatsapp.com/EzaO1H3hmAxJUYPirKmTKr?s=cl&p=a&mlu=4&ilr=4" target="_blank" class="btn-welcome-wa"><i class="fab fa-whatsapp" style="font-size: 1.1rem;"></i> Gabung Grup Pejuang Loker</a>
+        <div class="welcome-social-row">
+            <a href="https://tiktok.com/@loker.baraya" target="_blank" class="btn-welcome-soc btn-welcome-tiktok"><i class="fab fa-tiktok"></i> TikTok</a>
+            <a href="https://www.instagram.com/loker.baraya?stkn=aXZ5YzEzbHp1NjJs" target="_blank" class="btn-welcome-soc btn-welcome-ig"><i class="fab fa-instagram"></i> Instagram</a>
+        </div>
+        <button class="btn-welcome-start" onclick="closeWelcomePopup()">Semangat, Mulai Cari Loker!</button>
+    </div>
+</div>
+
+<div id="toast"><i class="fas fa-check-circle"></i><span id="toast-msg">Pesan berhasil</span></div>
+
+<input type="checkbox" id="m-post" class="rd">
+<input type="checkbox" id="m-pro" class="rd">
+<input type="checkbox" id="m-det" class="rd">
+<input type="checkbox" id="m-apply" class="rd">
+<input type="checkbox" id="m-preview" class="rd">
+<input type="checkbox" id="m-note" class="rd">
+<input type="checkbox" id="m-loc" class="rd">
+<input type="checkbox" id="m-type" class="rd">
+<input type="checkbox" id="m-sort" class="rd">
+<input type="checkbox" id="m-map-hub" class="rd">
+<input type="checkbox" id="m-about" class="rd">
+<input type="checkbox" id="m-privacy" class="rd">
+<input type="checkbox" id="m-help" class="rd">
+<input type="checkbox" id="m-auth" class="rd">
+<input type="checkbox" id="m-adm-webpt" class="rd">
+
+<!-- HEADER -->
+<header>
+<div class="logo-container" onclick="resetToPageOne()">
+    <div class="logo-icon-box"><i class="fas fa-briefcase"></i></div>
+    <div class="logo-text-group">
+        <div class="logo-main-text">Loker<span>Baraya</span></div>
+        <div class="logo-sub-text">Pintu Karir Baraya</div>
+    </div>
+</div>
+<div class="hdr-right">
+    <button class="btn-dark" id="darkToggle" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></button>
+    <!-- Tombol Admin hanya muncul jika admin berhasil login lewat form pelamar -->
+    <button class="btn-adm admin-only-flex" onclick="switchSection('adm')"><i class="fas fa-user-shield"></i> Panel Admin</button>
+</div>
+</header>
+
+<!-- HALAMAN HOME -->
+<div id="p-home" class="sec">
+<div class="hero">
+    <h1>Karir Impian Bandung Raya</h1>
+    <p>Portal Informasi Lowongan Kerja Terpercaya & Paling Fresh</p>
+    <div class="hero-badges">
+        <span class="hero-badge-item"><i class="fas fa-map-marker-alt"></i> Bandung • Cimahi • KBB</span>
+        <span class="hero-badge-item" id="freshCounterBadge" style="background:rgba(16,185,129,0.12); color:#10b981; border-color:rgba(16,185,129,0.3);"><i class="fas fa-fire"></i> 0 Loker Baru Minggu Ini</span>
+    </div>
+</div>
+
+<div class="public-stats-grid">
+    <div class="stat-card-pub">
+        <i class="fas fa-briefcase"></i>
+        <h3 id="statPubJobs">0</h3>
+        <p>Loker Aktif</p>
+    </div>
+    <div class="stat-card-pub">
+        <i class="fas fa-users"></i>
+        <h3 id="statPubPelamar">0</h3>
+        <p>Pelamar Terdaftar</p>
+    </div>
+    <div class="stat-card-pub">
+        <i class="fas fa-paper-plane"></i>
+        <h3 id="statPubSubmitted">0</h3>
+        <p>CV Disebar</p>
+    </div>
+</div>
+
+<div class="wa-links-container">
+<a href="https://chat.whatsapp.com/EzaO1H3hmAxJUYPirKmTKr?s=cl&p=a&mlu=4&ilr=4" target="_blank" class="btn-wa-group"><i class="fab fa-whatsapp"></i> Gabung Grup WA</a>
+<a href="https://whatsapp.com/channel/0029VbCT8T79MF98uCf5aR3j" target="_blank" class="btn-wa-channel"><i class="fas fa-bullhorn"></i> Ikuti Saluran WA</a>
+</div>
+
+<div class="sub-box">
+    <h3><i class="fas fa-bell"></i> Dapatkan Notifikasi Loker Terbaru</h3>
+    <p>Masukkan email atau nomor WhatsApp Anda agar tidak ketinggalan info loker segar setiap hari!</p>
+    <div class="sub-input-row">
+        <input type="text" id="subscriberInput" placeholder="Ketik nomor WA atau Email...">
+        <button class="btn-sub" onclick="subscribeUser()"><i class="fas fa-paper-plane"></i> Berlangganan</button>
+    </div>
+</div>
+
+<div class="search-container">
+    <div class="search-box-row1">
+        <input type="text" id="searchKeyword" placeholder="Cari posisi atau perusahaan..." oninput="filterJobs()">
+    </div>
+    <div class="search-box-row2">
+        <label for="m-loc" class="custom-sel-btn" id="lbl-loc">Semua Wilayah <i class="fas fa-chevron-down"></i></label>
+        <label for="m-type" class="custom-sel-btn" id="lbl-type">Semua Tipe <i class="fas fa-chevron-down"></i></label>
+        <label for="m-sort" class="custom-sel-btn" id="lbl-sort">Terbaru (Default) <i class="fas fa-chevron-down"></i></label>
+    </div>
+    <div class="search-box-row3">
+        <label for="m-map-hub" class="btn-map-hub" onclick="switchSection('map')"><i class="fas fa-map-marked-alt"></i> Peta Sebaran Wilayah Loker</label>
+    </div>
+</div>
+
+<div id="job-list" class="jobs-grid-container"></div>
+<div id="pagination-controls" class="pagination"></div>
+</div>
+
+<!-- HALAMAN PETA SEBARAN LOKER -->
+<div id="p-map" class="sec">
+<div class="hero" style="background: linear-gradient(135deg, #0ea5e915, #2563eb15); border-color: #0ea5e940; margin-bottom: 1.2rem;">
+    <h1 style="color: #0ea5e9; font-size: 1.6rem; margin-bottom: 6px;"><i class="fas fa-map-marked-alt"></i> Peta Sebaran Lokasi Loker</h1>
+    <p style="margin-bottom:0;">Melacak posisi Anda saat ini & menampilkan titik pin lokasi perusahaan berdasarkan link Google Maps pada lowongan aktif.</p>
+</div>
+
+<div class="card" style="padding: 1.2rem; margin-bottom: 1.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+        <div>
+            <h3 style="font-size: 1.05rem; margin-bottom: 2px;"><i class="fas fa-crosshairs" style="color:var(--primary)"></i> Akses Lokasi Pelamar (GPS)</h3>
+            <p id="userGpsStatus" style="font-size: 0.78rem; color: var(--muted); margin: 0;">Meminta izin akses lokasi perangkat Anda...</p>
+        </div>
+        <button class="btn-p" style="padding: 8px 14px; font-size: 0.8rem;" onclick="requestUserLocation()"><i class="fas fa-location-arrow"></i> Deteksi Ulang GPS</button>
+    </div>
+    
+    <div id="interactiveMapContainer" style="width: 100%; height: 350px; background: var(--bg); border-radius: 14px; border: 1px solid var(--border); overflow: hidden; position: relative;">
+        <iframe id="mapFrame" src="https://www.google.com/maps?q=Bandung&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+</div>
+
+<div class="card" style="padding: 1.2rem;">
+    <h3 style="font-size: 1.05rem; margin-bottom: 10px;"><i class="fas fa-building" style="color:var(--primary)"></i> Daftar Perusahaan & Pin Lokasi Aktif</h3>
+    <div id="mapJobListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto;">
+        <p style="color: var(--muted); font-size: 0.85rem; text-align: center;">Memuat daftar lokasi perusahaan...</p>
+    </div>
+</div>
+</div>
+
+<!-- HALAMAN WEB RESMI PT (DIREKTORI) -->
+<div id="p-webpt" class="sec">
+    <div class="hero" style="background: linear-gradient(135deg, #10b98115, #2563eb15); border-color: #10b98140; margin-bottom: 1.2rem;">
+        <h1 style="color: var(--primary); font-size: 1.6rem; margin-bottom: 6px;"><i class="fas fa-globe"></i> Web Resmi PT (Penempatan)</h1>
+        <p style="margin-bottom:0;">Direktori website resmi perusahaan & portal karir terpercaya di Bandung Raya.</p>
+    </div>
+    
+    <!-- FITUR TOTAL & SORTIR -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px; flex-wrap: wrap; gap: 10px;">
+        <div style="font-size: 0.85rem; font-weight: 700; color: var(--muted);">
+            Total: <span id="webPtTotalCount" style="color: var(--primary); font-weight: 800; font-size: 1rem;">0</span> PT
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <label style="font-size: 0.75rem; font-weight: 700; color: var(--muted);">Sortir:</label>
+            <select id="webPtSortSelect" onchange="loadWebHubList()" style="padding: 6px 10px; font-size: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-weight: 700; outline: none; cursor: pointer;">
+                <option value="newest">Terbaru</option>
+                <option value="az">Abjad (A - Z)</option>
+                <option value="za">Abjad (Z - A)</option>
+            </select>
+        </div>
+    </div>
+    
+    <div id="webHubListContainer" style="display: flex; flex-direction: column; gap: 10px;">
+        <p style="color: var(--muted); font-size: 0.85rem; text-align: center; padding: 20px;">Memuat daftar web perusahaan...</p>
+    </div>
+</div>
+
+<!-- HALAMAN TIPS & TRIK INTERVIEW -->
+<div id="p-tips" class="sec">
+<div class="hero" style="background: linear-gradient(135deg, #f59e0b15, #2563eb15); border-color: #f59e0b40; margin-bottom: 1.2rem;">
+    <h1 style="color: #f59e0b; font-size: 1.5rem; margin-bottom: 6px;"><i class="fas fa-lightbulb"></i> Tips & Trik Interview Kerja</h1>
+    <p style="margin-bottom:0;">Kupas tuntas persiapan, teknik menjawab, dan cara melibas pertanyaan jebakan HRD!</p>
+</div>
+
+<div class="card" style="padding: 1.2rem; margin-bottom: 1rem;">
+    <h3 style="font-size: 1.05rem; margin-bottom: 10px; color: var(--primary); display: flex; align-items: center; gap: 8px;">
+        <i class="fas fa-check-circle"></i> 1. Persiapan Dasar Sebelum Interview
+    </h3>
+    <ul style="font-size: 0.82rem; color: var(--muted); line-height: 1.7; padding-left: 18px; margin: 0; font-weight: 600;">
+        <li><b>Riset Perusahaan:</b> Pahami produk, bidang, atau layanan perusahaan yang dilamar.</li>
+        <li><b>Kuasai CV Sendiri:</b> Bersiaplah menjelaskan kembali isi riwayat pengalaman dan keterampilan yang Anda tulis.</li>
+        <li><b>Penampilan Rapi:</b> Gunakan pakaian formal atau <i>smart casual</i> yang bersih dan sopan sesuai standar perusahaan.</li>
+        <li><b>Datang Tepat Waktu:</b> Usahakan tiba 15 menit lebih awal untuk menenangkan diri.</li>
+    </ul>
+</div>
+
+<div class="card" style="padding: 1.2rem; margin-bottom: 1rem;">
+    <h3 style="font-size: 1.05rem; margin-bottom: 12px; color: #f59e0b; display: flex; align-items: center; gap: 8px;">
+        <i class="fas fa-exclamation-triangle"></i> 2. Mengatasi Pertanyaan Jebakan HRD
+    </h3>
+    
+    <div style="margin-bottom: 12px; background: var(--bg); padding: 10px; border-radius: 10px; border: 1px solid var(--border);">
+        <p style="font-size: 0.85rem; font-weight: 800; color: var(--text); margin-bottom: 4px;">❓ "Coba ceritakan kelebihan dan kekurangan terbesar Anda?"</p>
+        <p style="font-size: 0.8rem; color: var(--muted); margin: 0; line-height: 1.5;">💡 <b>Cara Jawab:</b> Sebutkan kelebihan yang relevan dengan posisi kerja. Untuk kekurangan, sebutkan kekurangan nyata yang <b>sudah/sedang Anda perbaiki</b>.</p>
+    </div>
+
+    <div style="margin-bottom: 12px; background: var(--bg); padding: 10px; border-radius: 10px; border: 1px solid var(--border);">
+        <p style="font-size: 0.85rem; font-weight: 800; color: var(--text); margin-bottom: 4px;">❓ "Berapa gaji yang Anda harapkan?"</p>
+        <p style="font-size: 0.8rem; color: var(--muted); margin: 0; line-height: 1.5;">💡 <b>Cara Jawab:</b> Lakukan riset standar UMR. Jawab dengan rentang realistis yang fleksibel mengikuti kebijakan perusahaan.</p>
+    </div>
+
+    <div style="background: var(--bg); padding: 10px; border-radius: 10px; border: 1px solid var(--border);">
+        <p style="font-size: 0.85rem; font-weight: 800; color: var(--text); margin-bottom: 4px;">❓ "Kenapa Anda keluar dari pekerjaan lama?"</p>
+        <p style="font-size: 0.8rem; color: var(--muted); margin: 0; line-height: 1.5;">💡 <b>Cara Jawab:</b> <b>Jangan pernah menjelek-jelekkan</b> perusahaan lama. Fokus pada alasan pengembangan karier atau kesiapan Anda membawa energi baru.</p>
+    </div>
+</div>
+
+<div class="card" style="padding: 1.2rem;">
+    <h3 style="font-size: 1.05rem; margin-bottom: 10px; color: #10b981; display: flex; align-items: center; gap: 8px;">
+        <i class="fas fa-star"></i> 3. Tips Saat Sesi Tanya Jawab Terakhir
+    </h3>
+    <p style="font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin: 0; font-weight: 600;">
+        Saat HRD bertanya: <i>"Ada yang ingin ditanyakan?"</i>, <b>jangan pernah menjawab "Tidak ada"</b>. Tanyakan hal yang menunjukkan antusiasme Anda.
+    </p>
+</div>
+</div>
+
+
+<!-- HALAMAN PROFIL & TRACKER -->
+<div id="p-prof" class="sec">
+    <div class="card" style="margin-bottom: 1.5rem; border: 1px solid var(--primary); background: linear-gradient(135deg, #eff6ff, #ffffff);" onclick="switchSection('lok')">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <h3 style="color:var(--primary); margin-bottom:4px;"><i class="fas fa-bookmark"></i> Loker Disimpan</h3>
+                <p style="font-size:0.8rem; color:var(--muted); margin:0;">Lihat daftar lowongan & catatan Anda.</p>
+            </div>
+            <button class="btn-p" style="padding: 8px 14px; border-radius: 10px;"><i class="fas fa-arrow-right"></i> Buka</button>
+        </div>
+    </div>
+
+    <div id="auth-required-box" class="card" style="text-align: center; padding: 2rem 1.5rem;">
+        <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-user-lock"></i></div>
+        <h3 style="margin-bottom: 8px;">Akses Akun Pelamar</h3>
+        <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem;">Silakan masuk atau daftar akun terlebih dahulu untuk melihat profil kandidat dan memantau status riwayat lamaran Anda secara real-time.</p>
+        <label for="m-auth" class="btn-p" style="width: 100%; justify-content: center;"><i class="fas fa-sign-in-alt"></i> Masuk / Daftar Akun Pelamar</label>
+    </div>
+
+    <div id="profile-content-box" style="display: none;">
+        <div class="card" style="padding:0; overflow:hidden; margin-bottom:1.5rem;" onclick="event.stopPropagation()">
+            <div class="profile-banner">
+                <label for="m-pro" class="profile-edit-btn"><i class="fas fa-edit"></i> Edit Profil</label>
+            </div>
+            <div class="profile-avatar-container"><div class="ava" id="vAva"><i class="fas fa-user"></i></div></div>
+            <div style="padding: 0 1.25rem 1.25rem 1.25rem; text-align:center;">
+                <h3 id="vNama" style="margin-top: 5px; font-size: 1.2rem;">Pelamar Baru</h3>
+                <p id="vEmailUser" style="color:var(--primary); font-size:0.8rem; font-weight:700; margin-top:2px;">email@domain.com</p>
+                <p id="vKerja" style="color:var(--muted); font-size:.9rem; margin:10px 0;">Belum ada pengalaman</p>
+                <div class="grid" style="text-align:left; background:var(--bg); padding:12px; border-radius:12px; border:1px solid var(--border);">
+                    <div><i class="fas fa-graduation-cap" style="color:var(--primary)"></i> <span id="vPend">SMA/SMK</span></div>
+                    <div><i class="fas fa-map-marker-alt" style="color:var(--primary)"></i> <span id="vLok">Bandung</span></div>
+                </div>
+                <button class="btn-e" style="width: 100%; justify-content: center; margin-top: 15px;" onclick="logoutMember()"><i class="fas fa-sign-out-alt"></i> Keluar Akun</button>
+            </div>
+        </div>
+        <div class="card" onclick="event.stopPropagation()">
+            <h3><i class="fas fa-tasks"></i> Status Lamaran & Tracker CV Saya</h3>
+            <div id="track-list" style="margin-top:10px;font-size:0.9rem;color:var(--muted);">Memuat riwayat lamaran...</div>
+        </div>
+    </div>
+</div>
+
+<!-- HALAMAN LOKER DISIMPAN -->
+<div id="p-lok" class="sec">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+    <h2><i class="fas fa-bookmark" style="color:var(--primary)"></i> Loker Disimpan</h2>
+    <button class="btn-rev" style="padding:6px 12px; font-size:0.75rem;" onclick="switchSection('prof')"><i class="fas fa-arrow-left"></i> Kembali</button>
+</div>
+<p style="color:var(--muted); font-size:0.85rem; margin-bottom:1rem;">Daftar lowongan kerja yang telah Anda simpan beserta catatan pribadi.</p>
+<div id="saved-job-list"><p style="color:var(--muted); text-align:center; margin-top:2rem;">Belum ada loker tersimpan.</p></div>
+</div>
+
+<!-- HALAMAN ADMIN -->
+<div id="p-adm" class="sec">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:10px;">
+    <h2 style="font-size:1.3rem;">Panel Admin & Analitik</h2>
+    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+        <label for="m-adm-webpt" class="btn-sh" style="margin:0; background:#8b5cf6;"><i class="fas fa-globe"></i> Kelola Web PT</label>
+        <button class="btn-dl" onclick="exportToCSV()"><i class="fas fa-file-csv"></i> Unduh CSV</button>
+        <label for="m-post" class="btn-p" style="margin:0;" onclick="prepareAdminPost()"><i class="fas fa-plus"></i> Tambah Loker</label>
+        <button class="btn-p" style="background:#ef4444; color:#fff; margin:0;" onclick="outAdmin()"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+    </div>
+</div>
+
+<div class="admin-stat-row" onclick="event.stopPropagation()">
+    <div class="admin-stat-card">
+        <h3 id="t-loker" style="color:var(--primary);">0</h3>
+        <p>Loker Aktif</p>
+    </div>
+    <div class="admin-stat-card">
+        <h3 id="t-pel" style="color:#10b981;">0</h3>
+        <p>Total Pelamar Terdata</p>
+    </div>
+</div>
+
+<div class="card admin-only-block" onclick="event.stopPropagation()" style="margin-bottom: 1.5rem;">
+    <h3 style="color: var(--primary); margin-bottom: 8px; font-size: 1.1rem;"><i class="fas fa-chart-bar"></i> Rekap Total Lamaran ke Masing-Masing PT</h3>
+    <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 12px;">Jumlah total pelamar yang masuk ke setiap perusahaan berdasarkan data portal:</p>
+    <div id="adminCompanyStatsContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto;">
+        <p style="color: var(--muted); font-size: 0.85rem; text-align: center;">Memuat rekap data PT...</p>
+    </div>
+</div>
+
+<div class="card admin-only-block" onclick="event.stopPropagation()" style="border: 2px dashed var(--primary); margin-bottom: 1.5rem;">
+    <h3 style="color: var(--primary); margin-bottom: 8px;"><i class="fas fa-file-excel"></i> Tambah Banyak Loker (Bulk Import)</h3>
+    <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 15px;">Punya daftar lowongan dalam jumlah banyak? Unduh template, isi datanya per kolom, lalu unggah file CSV ke sini!</p>
+    <div style="margin-bottom: 15px;"><button class="btn-dl" style="width: 100%; justify-content: center;" onclick="downloadCSVTemplate()"><i class="fas fa-download"></i> Unduh Template CSV (Format Kolom Excel)</button></div>
+    <div class="ocr-box" style="margin-bottom: 15px; border-color: var(--accent);">
+        <label style="font-size:0.85rem; color:var(--text); font-weight:700; display:block; margin-bottom:8px;"><i class="fas fa-upload"></i> Unggah File CSV Loker</label>
+        <input type="file" id="csvFileInput" accept=".csv" style="width: 100%; padding: 8px; margin-bottom: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; color: var(--text); box-sizing: border-box;">
+        <button class="btn-p" style="width:100%; justify-content:center; background: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.3);" onclick="processCSVFileImport()"><i class="fas fa-cloud-upload-alt"></i> Import File CSV Sekarang</button>
+    </div>
+    <div style="border-top: 1px dashed var(--border); padding-top: 15px;">
+        <label style="font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 8px; display: block;">Atau Salin & Tempel Baris Format Koma:</label>
+        <textarea id="bulkTextData" rows="4" style="width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.8rem; margin-bottom: 10px; box-sizing: border-box;" placeholder="Operator Produksi, PT ATEJA, Padalarang, Lamaran QC - Nama, hrd@ateja.co.id, Full-time"></textarea>
+        <button class="btn-p" style="width:100%; justify-content:center;" onclick="processBulkImport()"><i class="fas fa-paper-plane"></i> Import Teks Manual</button>
+    </div>
+</div>
+
+<div class="card" onclick="event.stopPropagation()">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+    <h3 style="margin: 0; font-size: 1.1rem;">Kelola Data Pelamar Masuk</h3>
+    <div style="display: flex; align-items: center; gap: 6px;">
+        <label style="font-size: 0.78rem; font-weight: 700; color: var(--muted);">Sortir:</label>
+        <select id="adminSortSelect" onchange="renderDataForAdmin()" style="padding: 6px 10px; font-size: 0.8rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-weight: 700;">
+            <option value="newest">Terbaru (Waktu Masuk)</option>
+            <option value="az">Abjad Nama Pelamar (A-Z)</option>
+            <option value="za">Abjad Nama Pelamar (Z-A)</option>
+            <option value="most_applied">Posisi Paling Banyak Dilamar</option>
+        </select>
+    </div>
+</div>
+<div class="table-responsive-box">
+<table class="tb">
+<thead><tr><th>Nama Pelamar</th><th>Posisi & PT</th><th>Waktu Kirim</th><th>Kontak WA</th></tr></thead>
+<tbody id="tb-pel"><tr><td colspan="4" style="text-align:center; color:var(--muted);">Memuat data pelamar...</td></tr></tbody>
+</table>
+</div>
+</div></div>
+
+<!-- FOOTER BAWAH -->
+<footer class="app-footer">
+    <div class="footer-content">
+        <div class="footer-brand">Loker<span>Baraya</span></div>
+        <p>Portal informasi lowongan kerja terpercaya dan terupdate untuk wilayah Bandung Raya. Wujudkan karir impianmu bersama kami!</p>
+        <div class="footer-social-row">
+            <a href="https://tiktok.com/@loker.baraya" target="_blank" class="footer-soc-btn footer-tiktok"><i class="fab fa-tiktok"></i> TikTok</a>
+            <a href="https://www.instagram.com/loker.baraya?stkn=aXZ5YzEzbHp1NjJs" target="_blank" class="footer-soc-btn footer-ig"><i class="fab fa-instagram"></i> Instagram</a>
+        </div>
+        <div class="footer-links">
+            <label for="m-about">Tentang Kami</label> • 
+            <label for="m-privacy">Kebijakan Privasi</label> • 
+            <label for="m-help">Bantuan</label>
+        </div>
+    </div>
+    <div class="footer-bottom">© 2026 Info LokerBaraya. Hak Cipta Dilindungi.</div>
+</footer>
+
+<nav class="bnav">
+    <div class="l-home" onclick="resetToPageOne()"><i class="fas fa-home"></i>Home</div>
+    <div class="l-map" onclick="switchSection('map'); initInteractiveMap();"><i class="fas fa-map-marked-alt"></i>Peta</div>
+    <div class="l-web" onclick="switchSection('webpt'); loadWebHubList();"><i class="fas fa-globe"></i>Web PT</div>
+    <div class="l-tips" onclick="switchSection('tips')"><i class="fas fa-lightbulb"></i>Tips</div>
+    <div class="l-prof" onclick="switchSection('prof')"><i class="far fa-user"></i>Profil</div>
+</nav>
+
+<div class="baraya-ai-fab" id="barayaAiFab" onclick="toggleBarayaAiChat()" title="Tanya Baraya AI"><i class="fas fa-robot"></i></div>
+
+<div class="baraya-ai-container" id="barayaAiBox">
+    <div class="baraya-ai-header">
+        <h3><i class="fas fa-robot"></i> Baraya AI (Asisten Loker)</h3>
+        <button class="baraya-ai-close" onclick="toggleBarayaAiChat()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="baraya-ai-body" id="barayaAiChatLog">
+        <div class="ai-msg bot">
+            Halo! Saya <b>Baraya AI</b> 🤖, asisten virtual portal LokerBaraya.<br>Ada yang bisa saya bantu seputar info lowongan kerja di Bandung Raya atau tips interview?
+        </div>
+    </div>
+    <div class="baraya-ai-footer">
+        <input type="text" id="barayaAiInput" placeholder="Ketik pertanyaan atau posisi loker..." onkeypress="handleAiKeyPress(event)">
+        <button onclick="sendBarayaAiMessage()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<!-- MODAL AUTENTIKASI MEMBER & ADMIN -->
+<div id="mod-auth" class="mod-ov">
+    <div class="mbox" style="max-width: 360px;">
+        <label for="m-auth" class="cx"><i class="fas fa-times"></i></label>
+        <h2 id="authModalTitle" style="margin-bottom: 5px;">Masuk Akun Pelamar</h2>
+        <p id="authModalSub" style="font-size:.8rem;color:var(--muted);margin-bottom:1.2rem;">Masukkan akun Anda untuk melacak lamaran kerja.</p>
+        
+        <div class="fg" id="fgAuthName" style="display: none;"><label>Nama Lengkap</label><input type="text" id="authNameInput" placeholder="Nama Anda"></div>
+        <div class="fg"><label>Email</label><input type="email" id="authEmailInput" placeholder="email@domain.com"></div>
+        <div class="fg" id="fgAuthPass"><label>Password</label><input type="password" id="authPassInput" placeholder="Minimal 6 karakter"></div>
+        
+        <div id="forgotPasswordLinkContainer" style="text-align: right; margin-bottom: 10px;">
+            <span style="font-size: 0.78rem; color: var(--primary); cursor: pointer; text-decoration: underline;" onclick="handleForgotPassword()">Lupa Kata Sandi?</span>
+        </div>
+
+        <div style="text-align: right; margin-top: 5px;">
+            <button class="btn-p" style="width: 100%; justify-content: center;" onclick="submitAuthAction()" id="authSubmitBtn">Masuk Sekarang</button>
+        </div>
+        
+        <div style="text-align: center; margin-top: 15px; font-size: 0.8rem; color: var(--muted);">
+            <span id="authToggleText">Belum punya akun?</span> 
+            <span id="authToggleLink" style="color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline;" onclick="toggleAuthMode()">Daftar di sini</span>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL TENTANG KAMI -->
+<div id="mod-about" class="mod-ov"><div class="mbox"><label for="m-about" class="cx"><i class="fas fa-times"></i></label><h2 style="font-size:1.2rem; margin-bottom:12px; color:var(--primary);"><i class="fas fa-info-circle"></i> Tentang LokerBaraya</h2><p style="font-size:0.85rem; color:var(--muted); line-height:1.6; margin-bottom:12px;"><b>LokerBaraya</b> adalah portal informasi lowongan kerja independen yang berfokus membantu para pencari kerja di wilayah Bandung Raya untuk mendapatkan informasi lowongan pekerjaan yang akurat, cepat, dan terpercaya.</p></div></div>
+
+<!-- MODAL KEBIJAKAN PRIVASI -->
+<div id="mod-privacy" class="mod-ov"><div class="mbox"><label for="m-privacy" class="cx"><i class="fas fa-times"></i></label><h2 style="font-size:1.2rem; margin-bottom:12px; color:var(--primary);"><i class="fas fa-shield-alt"></i> Kebijakan Privasi</h2><p style="font-size:0.85rem; color:var(--muted); line-height:1.6; margin-bottom:12px;">Kami sangat menghargai privasi Anda. Data profil, catatan pribadi, serta riwayat lamaran yang Anda masukkan ke dalam aplikasi disimpan secara aman di Cloud Firestore.</p></div></div>
+
+<!-- MODAL BANTUAN -->
+<div id="mod-help" class="mod-ov"><div class="mbox"><label for="m-help" class="cx"><i class="fas fa-times"></i></label><h2 style="font-size:1.2rem; margin-bottom:12px; color:var(--primary);"><i class="fas fa-question-circle"></i> Pusat Bantuan</h2><p style="font-size:0.85rem; color:var(--muted); line-height:1.6; margin-bottom:12px;"><b>Pertanyaan Umum (FAQ):</b><br>• <i>Bagaimana cara melamar kerja?</i><br>Cukup klik salah satu loker, lalu tekan tombol <b>Lamar Sekarang</b> atau gunakan pintasan WhatsApp / Email HRD.<br><br>Butuh bantuan lebih lanjut? Silakan bergabung ke grup WhatsApp kami!</p></div></div>
+
+<!-- MODAL CUSTOM DROPDOWN WILAYAH -->
+<div id="mod-loc" class="mod-ov"><div class="mbox" style="max-width:320px; padding: 1.5rem 1rem;"><label for="m-loc" class="cx"><i class="fas fa-times"></i></label><h3 style="margin-bottom:15px; font-weight: 800;"><i class="fas fa-map-marker-alt" style="color:var(--primary)"></i> Pilih Wilayah</h3><div style="display:flex; flex-direction:column;"><div class="opt-item" onclick="selectLoc('', 'Semua Wilayah')"><i class="fas fa-globe"></i> Semua Wilayah</div><div class="opt-item" onclick="selectLoc('Bandung', 'Bandung')"><i class="fas fa-city"></i> Bandung</div><div class="opt-item" onclick="selectLoc('Cimahi', 'Cimahi')"><i class="fas fa-building"></i> Cimahi</div><div class="opt-item" onclick="selectLoc('KBB', 'KBB / Padalarang')"><i class="fas fa-mountain"></i> KBB / Padalarang</div></div></div></div>
+
+<!-- MODAL CUSTOM DROPDOWN TIPE KERJA -->
+<div id="mod-type" class="mod-ov"><div class="mbox" style="max-width:320px; padding: 1.5rem 1rem;"><label for="m-type" class="cx"><i class="fas fa-times"></i></label><h3 style="margin-bottom:15px; font-weight: 800;"><i class="fas fa-briefcase" style="color:var(--primary)"></i> Tipe Pekerjaan</h3><div style="display:flex; flex-direction:column;"><div class="opt-item" onclick="selectType('', 'Semua Tipe')"><i class="fas fa-list"></i> Semua Tipe</div><div class="opt-item" onclick="selectType('Full-time', 'Full-time')"><i class="fas fa-clock"></i> Full-time</div><div class="opt-item" onclick="selectType('Part-time', 'Part-time')"><i class="fas fa-hourglass-half"></i> Part-time</div><div class="opt-item" onclick="selectType('Kontrak', 'Kontrak')"><i class="fas fa-file-signature"></i> Kontrak</div><div class="opt-item" onclick="selectType('Freelance', 'Freelance')"><i class="fas fa-laptop-house"></i> Freelance</div></div></div></div>
+
+<!-- MODAL CUSTOM DROPDOWN URUTKAN -->
+<div id="mod-sort" class="mod-ov"><div class="mbox" style="max-width:320px; padding: 1.5rem 1rem;"><label for="m-sort" class="cx"><i class="fas fa-times"></i></label><h3 style="margin-bottom:15px; font-weight: 800;"><i class="fas fa-sort" style="color:var(--primary)"></i> Urutkan Postingan</h3><div style="display:flex; flex-direction:column;"><div class="opt-item" onclick="selectSort('newest', 'Terbaru (Default)')"><i class="fas fa-fire"></i> Terbaru (Default)</div><div class="opt-item" onclick="selectSort('oldest', 'Terlama')"><i class="fas fa-history"></i> Terlama</div><div class="opt-item" onclick="selectSort('deadline', 'Deadline Terdekat')"><i class="fas fa-clock"></i> Deadline Terdekat</div></div></div></div>
+
+<!-- MODALS LAINNYA -->
+<div id="mod-note" class="mod-ov"><div class="mbox" style="max-width:360px;"><label for="m-note" class="cx"><i class="fas fa-times"></i></label><h2><i class="fas fa-sticky-note" style="color:#f59e0b;"></i> Catatan Pribadi Loker</h2><p id="note-job-title" style="font-size:0.8rem; color:var(--muted); margin-bottom:12px;"></p><input type="hidden" id="noteJobId" value=""><div class="fg"><label>Tulis Catatan / Pengingat:</label><textarea id="noteContentInput" rows="4" placeholder="Contoh: Sudah kirim CV..."></textarea></div><div style="text-align: right; display:flex; gap:8px; justify-content:flex-end;"><button class="btn-rev" onclick="document.getElementById('m-note').checked=false">Batal</button><button class="btn-p" onclick="saveJobNote()">Simpan Catatan</button></div></div></div>
+
+<!-- MODAL KELOLA WEB PT (ADMIN) -->
+<div id="mod-adm-webpt" class="mod-ov">
+    <div class="mbox" style="max-width: 400px; padding-top: 1.5rem;">
+        <label for="m-adm-webpt" class="cx"><i class="fas fa-times"></i></label>
+        <h2><i class="fas fa-globe" style="color:var(--primary)"></i> Kelola Direktori Web PT</h2>
+        <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 15px;">Tambahkan link website resmi perusahaan beserta logonya untuk ditampilkan di halaman Web PT.</p>
+        
+        <div class="ocr-box" style="margin-bottom: 12px; border-color: var(--accent);">
+            <label style="font-size:0.8rem; font-weight:800; color:var(--text); margin-bottom:8px; display:block;"><i class="fas fa-cloud-upload-alt"></i> Upload Logo PT (Opsional)</label>
+            <input type="file" id="wLogo" accept="image/*" style="width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 6px;">
+        </div>
+        
+        <div class="fg"><label>Nama Perusahaan</label><input type="text" id="wNama" placeholder="Contoh: PT Loker Baraya"></div>
+        <div class="fg"><label>Link Website Resmi</label><input type="url" id="wLink" placeholder="https://..."></div>
+        
+        <button class="btn-p" style="width: 100%; justify-content: center; background: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.3);" onclick="saveWebPT()"><i class="fas fa-save"></i> Simpan Direktori PT</button>
+        
+        <h3 style="margin-top: 25px; font-size: 1rem; border-top: 1px dashed var(--border); padding-top: 15px;">Daftar Direktori Aktif</h3>
+        <div id="adminWebPtList" style="max-height: 180px; overflow-y: auto; margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+            <p style="font-size:0.8rem; color:var(--muted); text-align:center;">Memuat data...</p>
+        </div>
+    </div>
+</div>
+
+<div id="mod-det" class="mod-ov"><div class="mbox" style="padding-top:2rem;"><label for="m-det" class="cx"><i class="fas fa-times"></i></label><div style="margin-bottom: 12px; padding-right: 25px;"><div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 5px;"><h2 id="d-pos" style="font-size: 1.25rem; line-height: 1.2;">Posisi</h2><div id="d-prem-badge"></div></div><div id="d-pt" style="color:var(--primary);font-weight:700;font-size:1rem;">Perusahaan</div></div><div class="status-badge-row"><div id="d-status-badge"></div><div id="d-deadline-badge"></div></div><div class="grid" style="background:var(--bg);padding:12px;border-radius:12px;margin-bottom:15px;border:1px solid var(--border);"><div><i class="fas fa-map-marker-alt" style="color:var(--primary)"></i> <span id="d-lok" style="font-size:.85rem;font-weight:600;">Lokasi</span></div><div><i class="fas fa-envelope-open-text" style="color:var(--primary)"></i> <span id="d-gaji" style="font-size:.85rem;font-weight:600;">Subjek</span></div><div><i class="fas fa-graduation-cap" style="color:var(--primary)"></i> <span id="d-pend" style="font-size:.85rem;font-weight:600;">Pendidikan</span></div><div><i class="fas fa-industry" style="color:var(--primary)"></i> <span id="d-ind" style="font-size:.85rem;font-weight:600;">Industri</span></div></div>
+
+<div id="d-desc-box" style="margin-bottom:12px;"><h4 style="margin-bottom:6px; font-size:0.9rem; color:var(--text);"><i class="fas fa-file-alt"></i> Deskripsi Pekerjaan:</h4><p id="d-desc" style="font-size:.83rem;color:var(--muted);line-height:1.5;margin:0;white-space:pre-wrap;">-</p></div>
+<div id="d-qual-box" style="margin-bottom:12px;"><h4 style="margin-bottom:6px; font-size:0.9rem; color:var(--text);"><i class="fas fa-check-circle"></i> Kualifikasi:</h4><p id="d-qual" style="font-size:.83rem;color:var(--muted);line-height:1.5;margin:0;white-space:pre-wrap;">-</p></div>
+<div id="d-ben-box" style="margin-bottom:15px;"><h4 style="margin-bottom:6px; font-size:0.9rem; color:var(--text);"><i class="fas fa-gift"></i> Benefit:</h4><p id="d-ben" style="font-size:.83rem;color:var(--muted);line-height:1.5;margin:0;white-space:pre-wrap;">-</p></div>
+
+<button class="btn-apply" id="btn-apply-modal" onclick="openApplyModal()"><i class="fas fa-paper-plane"></i> Catat Lamaran Saya (Tracker)</button><div id="d-actions" style="display:flex;gap:6px;flex-wrap:wrap; margin-top:12px;"></div></div></div>
+
+<div id="mod-preview" class="mod-ov">
+    <div class="mbox" style="max-width:96vw; width:100%; height:92vh; max-height:92vh; display:flex; flex-direction:column; justify-content:space-between; padding:1.5rem;">
+        <div>
+            <label for="m-preview" class="cx"><i class="fas fa-times"></i></label>
+            <h2 style="font-size:1.3rem; margin-bottom:4px;"><i class="fas fa-eye" style="color:var(--primary)"></i> Pratinjau Pesan Lamaran</h2>
+            <p style="font-size:0.85rem; color:var(--muted); margin-bottom:12px;">Periksa pesan di bawah ini sebelum dikirim:</p>
+        </div>
+        <div class="fg" style="flex:1; display:flex; flex-direction:column; margin-bottom:1rem;">
+            <textarea id="previewTextContent" style="flex:1; width:100%; font-size:1rem; line-height:1.6; font-family:'Plus Jakarta Sans', monospace; padding:15px; border-radius:14px; border:1px solid var(--border); background:var(--bg); color:var(--text); resize:none; box-sizing:border-box;"></textarea>
+        </div>
+        <div style="display:flex; gap:10px; justify-content:flex-end; flex-shrink:0;">
+            <button class="btn-rev" style="padding:12px 20px; font-size:0.95rem;" onclick="document.getElementById('m-preview').checked=false">Batal</button>
+            <button class="btn-p" style="padding:12px 24px; font-size:0.95rem;" onclick="executeSendAction()"><i class="fas fa-paper-plane"></i> Lanjutkan Kirim</button>
+        </div>
+    </div>
+</div>
+
+<div id="mod-apply" class="mod-ov">
+    <div class="mbox" style="max-width:360px;">
+        <label for="m-apply" class="cx"><i class="fas fa-times"></i></label>
+        <h2>Catat Riwayat Lamaran</h2>
+        <p id="apply-job-title" style="font-size:0.85rem; color:var(--primary); font-weight:600; margin-bottom:15px;"></p>
+        <div class="fg"><label>Nama Lengkap</label><input type="text" id="appNama"></div>
+        <div class="fg"><label>No. WhatsApp Aktif</label><input type="text" id="appWa" placeholder="08xxxxxxxxxx"></div>
+        <div class="fg"><label>Pendidikan Terakhir</label><input type="text" id="appPend" placeholder="SMA / SMK / S1"></div>
+        <p style="font-size:0.75rem; color:var(--muted); margin-bottom:15px; line-height:1.4;">💡 Catatan: Berkas lamaran & CV nantinya dikirim langsung oleh Anda melalui WhatsApp atau Email resmi perusahaan.</p>
+        <div style="text-align: right; margin-top: 15px;"><button class="btn-p" id="btnSubmitApp" onclick="submitApplication()">Simpan ke Tracker Saya</button></div>
+    </div>
+</div>
+
+<div id="mod-post" class="mod-ov"><div class="mbox"><label for="m-post" class="cx" onclick="resetJobForm()"><i class="fas fa-times"></i></label><h2 id="modal-post-title">Tambah Loker</h2>
+<input type="hidden" id="editJobId" value="">
+<div class="ocr-box" id="ocrBoxContainer"><label style="font-size:0.85rem; color:var(--primary); font-weight:700; display:block; margin-bottom:5px;"><i class="fas fa-magic"></i> Auto Scan & Isi Form (OCR)</label><p style="font-size:0.7rem; color:var(--muted); margin-bottom:8px;">Pilih foto brosur loker.</p><input type="file" id="ocrFile" accept="image/*"><button class="btn-p" style="margin-top:8px; width:100%; justify-content:center;" onclick="processOCR()">Mulai Ekstrak & Auto-Isi</button><div id="ocrStatus" style="font-size:0.75rem; font-weight:700; color:var(--primary); margin-top:8px; text-align:center;"></div><textarea id="ocrResult" rows="2" style="margin-top:8px; resize:vertical; display:none; font-size:0.7rem; box-sizing:border-box;" readonly></textarea></div>
+<div class="fg"><label>Batas Waktu (Deadline)</label><input type="date" id="jDeadline"></div>
+<div class="fg"><label>Posisi Pekerjaan</label><input type="text" id="jPos"></div><div class="fg"><label>Nama Perusahaan</label><input type="text" id="jPT"></div><div class="fg"><label>Lokasi PT / Alamat</label><input type="text" id="jLokasi" placeholder="Cimahi / Bandung / KBB"></div>
+<div class="fg"><label>Tipe Pekerjaan</label><select id="jType"><option value="Full-time">Full-time</option><option value="Part-time">Part-time</option><option value="Kontrak">Kontrak</option><option value="Freelance">Freelance</option></select></div>
+<div class="fg"><label>Pendidikan Minimal</label><select id="jPend" onchange="checkManual('jPend', 'jPendManual')"><option value="Tidak Syarat">Tidak Syarat</option><option value="SMP">SMP / Sederajat</option><option value="SMA/SMK" selected>SMA / SMK Sederajat</option><option value="D3">Diploma (D3)</option><option value="S1">Sarjana (S1)</option><option value="Lainnya">Lainnya (Isi Manual)</option></select><input type="text" id="jPendManual" placeholder="Ketik manual..." style="display:none; margin-top:8px;"></div>
+<div class="fg"><label>Kategori Industri</label><select id="jInd" onchange="checkManual('jInd', 'jIndManual')"><option value="F&B" selected>F&B (Food & Beverage)</option><option value="Jasa">Jasa / Layanan</option><option value="Manufaktur">Manufaktur</option><option value="Pabrik">Pabrik</option><option value="Retail">Retail</option><option value="Teknologi">Teknologi / IT</option><option value="Lainnya">Lainnya (Isi Manual)</option></select><input type="text" id="jIndManual" placeholder="Ketik manual..." style="display:none; margin-top:8px;"></div>
+<div class="fg"><label><i class="fas fa-map-marked-alt" style="color:var(--primary);"></i> Link Google Maps PT / Alamat</label><input type="text" id="jMaps" placeholder="Tempel link Google Maps"></div>
+
+<div class="fg"><label>Deskripsi Pekerjaan (Opsional)</label><textarea id="jDesc" rows="3" placeholder="Tuliskan deskripsi atau tanggung jawab pekerjaan..."></textarea></div>
+<div class="fg"><label>Kualifikasi / Persyaratan (Wajib)</label><textarea id="jQual" rows="4" placeholder="Tuliskan persyaratan/kualifikasi kandidat..."></textarea></div>
+<div class="fg"><label>Benefit / Fasilitas (Opsional)</label><textarea id="jBen" rows="3" placeholder="Tuliskan gaji, BPJS, atau fasilitas lainnya..."></textarea></div>
+
+<div class="fg"><label>Subjek Email Lamaran</label><input type="text" id="jSubjek" placeholder="Contoh: Lamaran QC - Nama Anda"></div>
+<div class="fg"><label>No. WhatsApp HRD</label><input type="text" id="jWa" placeholder="08xxxxxxxxxx"></div><div class="fg"><label>Email HRD</label><input type="email" id="jMail" placeholder="hrd@perusahaan.com"></div><div class="fg"><label>Link Web Perusahaan</label><input type="text" id="jWeb" placeholder="https://perusahaan.com/karir"></div>
+<div class="fg" style="display:flex;gap:15px;align-items:center; flex-wrap:wrap; padding: 12px; border: 1px dashed var(--primary); border-radius: 12px;"><label style="margin:0; cursor:pointer;"><input type="checkbox" id="jIsOpen" checked> 🟢 Buka</label><label style="margin:0; cursor:pointer;"><input type="checkbox" id="jPin"> 📌 Pin</label><label style="margin:0; cursor:pointer;"><input type="checkbox" id="jPrem"> 🌟 Premium</label></div>
+
+<canvas id="posterCanvas" width="1080" height="1350" style="display:none;"></canvas>
+
+<div style="display:flex; gap:10px; margin-top:1rem; flex-wrap:wrap;">
+    <button class="btn-sh" style="flex:1; justify-content:center; background:#10b981;" onclick="generateAndDownloadPoster()"><i class="fas fa-image"></i> 🎨 Buat & Unduh Poster Medsos</button>
+    <button class="btn-p" style="flex:1; justify-content:center; padding:10px 20px;" onclick="aJob()" id="submitJobBtnText">Publikasi Loker</button>
+</div>
+</div></div>
+
+<!-- MODAL EDIT PROFIL KANDIDAT -->
+<div id="mod-pro" class="mod-ov"><div class="mbox"><label for="m-pro" class="cx"><i class="fas fa-times"></i></label><h2>Edit Profil Kandidat</h2>
+<div class="fg"><label>Foto Profil (Upload ke Cloud)</label><input type="file" id="iFoto" accept="image/*" style="padding:4px"></div><div class="fg"><label>Nama Lengkap</label><input type="text" id="iNama"></div><div class="fg"><label>No. WhatsApp</label><input type="text" id="iWaPel" placeholder="08xxxxxxxxxx"></div><div class="fg"><label>Pendidikan Terakhir</label><input type="text" id="iPend" placeholder="SMA / SMK / S1"></div><div class="fg"><label>Pengalaman</label><input type="text" id="iPengalaman" placeholder="Cth: 1 Tahun"></div><div class="fg"><label>Lokasi Domisili</label><input type="text" id="iLok"></div>
+<div style="text-align: right;"><button class="btn-p" style="padding:10px 20px;" onclick="sProf()" id="btnSaveProfile">Simpan</button></div></div></div>
+
+<script>
+let defaultJobs = [
+    { id: 12, pos: "Quality Control", pt: "PT Indofood CBP", lok: "Bandung", type: "Full-time", subjek: "Lamaran QC - [Nama]", pend: "SMA/SMK", ind: "Pabrik", isP: true, isPin: true, isOpen: true, createdAt: "2026-09-28", deadline: "2026-10-15", wa: "08123456780", mail: "hrd@indofood.co.id", web: "https://indofood.com/karir", maps: "https://maps.google.com/?q=-6.9147,107.6098", desc: "Melakukan pengecekan kualitas produk makanan sesuai standar perusahaan.", qual: "Kualifikasi: Teliti, pengalaman QC min 1 tahun.", ben: "Gaji UMR, BPJS Kesehatan & Ketenagakerjaan.", applyCount: 14 },
+    { id: 11, pos: "Barista Full Time", pt: "Kopi Kenangan", lok: "Cimahi", type: "Part-time", subjek: "Barista - [Nama]", pend: "SMA/SMK", ind: "F&B", isP: false, isPin: false, isOpen: true, createdAt: "2026-09-20", deadline: "", wa: "082211223344", mail: "career@kopikenangan.com", web: "https://kopikenangan.com/karir", maps: "https://maps.google.com/?q=Cimahi", desc: "Membuat dan menyajikan minuman kopi sesuai standar operasional.", qual: "Kualifikasi: Pria/Wanita, komunikatif, bersedia shift.", ben: "Gaji pokok + bonus penjualan.", applyCount: 8 },
+    { id: 1, pos: "Operator Produksi", pt: "PT ATEJA Multi Industri", lok: "Padalarang, KBB", type: "Full-time", subjek: "Operator - [Nama]", pend: "SMA/SMK", ind: "Pabrik", isP: true, isPin: false, isOpen: true, createdAt: "2026-09-28", deadline: "2026-12-01", wa: "08123456789", mail: "hrd@ateja.co.id", web: "https://ateja.co.id/karir", maps: "https://maps.google.com/?q=-6.8407,107.4916", desc: "Mengoperasikan mesin produksi tekstil dan menjaga target harian.", qual: "Kualifikasi: Pria/Wanita usia maks 35 tahun, sehat jasmani rohani.", ben: "Gaji UMR, uang transport, lemburan.", applyCount: 25 }
+];
+
+let allJobs = defaultJobs; 
+let pelamarList = []; 
+let webPtDirectory = []; 
+let globalPelamarTotalCount = 0;
+let savedJobs = JSON.parse(localStorage.getItem('lb_saved')) || {};
+let subscribersList = JSON.parse(localStorage.getItem('lb_subscribers')) || {};
+let userProfile = { nama: "Pelamar Baru", wa: "", pendidikan: "SMA/SMK", pengalaman: "Belum ada pengalaman", lokasi: "Bandung", fotoUrl: "" };
+let currentAuthUser = null;
+let isRegisterMode = false;
+let realTimeListenerUnsubscribe = null;
+let globalStatsListenerUnsubscribe = null;
+
+let filteredJobs = [...allJobs];
+let currentPage = 1; 
+const jobsPerPage = 10; 
+let currentSelectedJob = null; 
+let pendingSendCallback = null;
+
+let currentLocFilter = "";
+let currentTypeFilter = "";
+let currentSortFilter = "newest"; 
+let jobIdCounter = allJobs.length > 0 ? Math.max(...allJobs.map(j => j.id)) : 12;
+
+const randomWelcomeQuotes = [
+    "Doi yang dingin dan suka nge-gantungin perasaan aja kamu perjuangin, apalagi info lowongan kerja? Yuk semangat cari cuan!",
+    "Pesan buat kamu yang sering di-read doang: mending alihkan energi bucinmu buat sebar CV. Biar gajian, dan kali aja dapet jodoh HRD haha!",
+    "Daripada nungguin chat dari dia yang gak pasti, mending nunggu panggilan interview. Jelas lebih menjanjikan!"
+];
+
+// FUNGSI PEMBERSIH XSS (SANITASI SANTAI)
+function escapeHtml(text) {
+    if (!text) return "";
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// FUNGSI REKAM OTOMATIS AKTIVITAS PENGGUNA CV KE FIREBASE
+async function recordCvUserActivity(name, phone, email) {
+    if (!name && !phone && !email) return;
+    try {
+        await fbDb.collection("cv_users_log").add({
+            nama: escapeHtml(name),
+            wa: escapeHtml(phone),
+            email: escapeHtml(email),
+            waktu: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error("Gagal merekam aktivitas CV ke Firebase:", error);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+    let html = document.documentElement; let btn = document.getElementById('darkToggle'); let metaScheme = document.getElementById('meta-color-scheme');
+    let currentHour = new Date().getHours();
+    if (currentHour >= 18 || currentHour < 6) {
+        html.setAttribute('data-theme', 'dark'); html.style.colorScheme = 'dark';
+        if(metaScheme) metaScheme.setAttribute('content', 'dark'); btn.innerHTML = '<i class="fas fa-sun"></i>';
+    } else {
+        html.setAttribute('data-theme', 'light'); html.style.colorScheme = 'light';
+        if(metaScheme) metaScheme.setAttribute('content', 'light'); btn.innerHTML = '<i class="fas fa-moon"></i>';
+    }
+    
+    document.getElementById('randomWelcomeText').innerText = randomWelcomeQuotes[Math.floor(Math.random() * randomWelcomeQuotes.length)];
+    
+    const urlParamsCheck = new URLSearchParams(window.location.search);
+    if (urlParamsCheck.get('job')) {
+        let popup = document.getElementById('welcomePopup');
+        if(popup) popup.style.display = 'none';
+    }
+
+    await fetchJobsFromFirebase();
+    await fetchWebPTFromFirebase(); 
+    setupGlobalStatsRealtimeListener();
+
+    fbAuth.onAuthStateChanged(async (user) => {
+        if (user) {
+            currentAuthUser = user;
+            document.getElementById('auth-required-box').style.display = 'none';
+            document.getElementById('profile-content-box').style.display = 'block';
+            document.getElementById('vEmailUser').innerText = escapeHtml(user.email);
+            
+            const daftarAdmin = ["barlok@lb.com"];
+            if (daftarAdmin.includes(user.email)) {
+                document.body.classList.add('admin-mode');
+            } else {
+                document.body.classList.remove('admin-mode');
+            }
+
+            await loadUserProfileFromFirestore(user.email);
+            setupRealtimePelamarListener(user.email);
+        } else {
+            currentAuthUser = null;
+            document.body.classList.remove('admin-mode');
+            if(realTimeListenerUnsubscribe) realTimeListenerUnsubscribe();
+            document.getElementById('auth-required-box').style.display = 'block';
+            document.getElementById('profile-content-box').style.display = 'none';
+        }
+    });
+
+    renderSavedJobs(); updateFreshCounterBadge();
+});
+
+async function fetchJobsFromFirebase() {
+    try {
+        const querySnapshot = await fbDb.collection("jobs").get();
+        if (!querySnapshot.empty) {
+            let cloudJobs = [];
+            querySnapshot.forEach((docSnap) => {
+                let data = docSnap.data();
+                let isOpenStatus = data.isOpen !== undefined ? data.isOpen : true;
+                if (data.deadline) {
+                    let deadlineDate = new Date(data.deadline);
+                    deadlineDate.setHours(23,59,59,999);
+                    if (deadlineDate < new Date()) { isOpenStatus = false; }
+                }
+                cloudJobs.push({ firebaseId: docSnap.id, applyCount: 0, ...data, isOpen: isOpenStatus });
+            });
+            allJobs = cloudJobs;
+            filteredJobs = [...allJobs];
+            filterJobs(); 
+            updatePublicStats(); 
+            updateFreshCounterBadge();
+        }
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const jobIdParam = urlParams.get('job');
+        if (jobIdParam) {
+            let popup = document.getElementById('welcomePopup');
+            if(popup) popup.style.display = 'none';
+            setTimeout(() => { sDetById(jobIdParam); }, 300);
+        }
+    } catch (error) {
+        console.error("Gagal mengambil data dari Firestore:", error);
+    }
+}
+
+async function fetchWebPTFromFirebase() {
+    try {
+        const snap = await fbDb.collection("web_pt").get();
+        webPtDirectory = [];
+        snap.forEach(doc => {
+            webPtDirectory.push({ id: doc.id, ...doc.data() });
+        });
+        loadWebHubList(); 
+        renderAdminWebPT();
+    } catch(e) {
+        console.error("Gagal load Web PT", e);
+    }
+}
+
+async function saveWebPT() {
+    let ptName = document.getElementById('wNama').value.trim();
+    let linkUrl = document.getElementById('wLink').value.trim();
+    let fileInput = document.getElementById('wLogo').files[0];
+    
+    if(!ptName || !linkUrl) { showToast("Nama Perusahaan & Link Website wajib diisi!"); return; }
+    
+    let btnSave = document.querySelector('#mod-adm-webpt .btn-p');
+    btnSave.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Menyimpan...`;
+    btnSave.disabled = true;
+    
+    let webData = { pt: escapeHtml(ptName), link: linkUrl, createdAt: new Date().toISOString() };
+    
+    try {
+        if(fileInput) {
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                webData.logoBase64 = e.target.result;
+                await fbDb.collection("web_pt").add(webData);
+                await fetchWebPTFromFirebase();
+                showToast("✅ Direktori Web PT Berhasil Disimpan!");
+                resetWebPTForm();
+            };
+            reader.readAsDataURL(fileInput);
+        } else {
+            await fbDb.collection("web_pt").add(webData);
+            await fetchWebPTFromFirebase();
+            showToast("✅ Direktori Web PT Berhasil Disimpan!");
+            resetWebPTForm();
+        }
+    } catch(err) {
+        console.error(err);
+        showToast("Gagal menyimpan ke database.");
+    } finally {
+        btnSave.innerHTML = `<i class="fas fa-save"></i> Simpan Direktori PT`;
+        btnSave.disabled = false;
+    }
+}
+
+async function deleteWebPT(id) {
+    if(confirm("Yakin ingin menghapus direktori perusahaan ini?")) {
+        try { await fbDb.collection("web_pt").doc(id).delete(); await fetchWebPTFromFirebase(); showToast("Web PT berhasil dihapus!"); } catch(e) { showToast("Gagal menghapus."); }
+    }
+}
+
+function resetWebPTForm() {
+    document.getElementById('wNama').value = ""; document.getElementById('wLink').value = ""; document.getElementById('wLogo').value = "";
+}
+
+function renderAdminWebPT() {
+    let container = document.getElementById('adminWebPtList');
+    if(!container) return;
+    if(webPtDirectory.length === 0) { container.innerHTML = `<p style="font-size:0.8rem; color:var(--muted); text-align:center;">Belum ada direktori aktif.</p>`; return; }
+    
+    container.innerHTML = "";
+    webPtDirectory.forEach(item => {
+        container.innerHTML += `
+            <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg); padding:10px 12px; border-radius:10px; border:1px solid var(--border);">
+                <div style="font-size:0.85rem; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 75%;">${escapeHtml(item.pt)}</div>
+                <button class="btn-e" style="padding:6px 10px; font-size:0.75rem; border-radius:8px;" onclick="deleteWebPT('${item.id}')"><i class="fas fa-trash"></i></button>
+            </div>
+        `;
+    });
+}
+
+function loadWebHubList() {
+    let container = document.getElementById('webHubListContainer');
+    let totalLabel = document.getElementById('webPtTotalCount');
+    if(!container) return;
+
+    if(totalLabel) totalLabel.innerText = webPtDirectory.length;
+
+    if(webPtDirectory.length === 0) {
+        container.innerHTML = `<p style="color: var(--muted); font-size: 0.85rem; text-align: center; padding: 20px;">Belum ada direktori web resmi perusahaan yang tersedia saat ini.</p>`;
+        return;
+    }
+
+    let sortVal = document.getElementById('webPtSortSelect') ? document.getElementById('webPtSortSelect').value : 'newest';
+    let sortedList = [...webPtDirectory];
+
+    if(sortVal === 'az') { sortedList.sort((a, b) => (a.pt || "").localeCompare(b.pt || "")); } 
+    else if(sortVal === 'za') { sortedList.sort((a, b) => (b.pt || "").localeCompare(a.pt || "")); } 
+    else { sortedList.sort((a, b) => { let dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0; let dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0; return dateB - dateA; }); }
+
+    container.innerHTML = "";
+    sortedList.forEach(j => {
+        let logoHtml = j.logoBase64 ? `<img src="${j.logoBase64}" style="width:48px; height:48px; object-fit:contain; border-radius:12px; background:#fff; padding:3px; border:1px solid var(--border); box-shadow: 0 2px 6px rgba(0,0,0,0.05); flex-shrink:0;">` : `<div style="width:48px; height:48px; background:linear-gradient(135deg, rgba(37,99,235,0.1), rgba(14,165,233,0.1)); color:var(--primary); display:flex; align-items:center; justify-content:center; border-radius:12px; font-size:1.4rem; border:1px solid rgba(37,99,235,0.2); box-shadow: 0 2px 6px rgba(0,0,0,0.05); flex-shrink:0;"><i class="fas fa-building"></i></div>`;
+        container.innerHTML += `
+            <div style="background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: transform 0.2s;">
+                <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+                    ${logoHtml}
+                    <div style="min-width:0;">
+                        <h4 style="font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(j.pt)}</h4>
+                        <p style="font-size: 0.75rem; color: var(--primary); font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Portal Karir Resmi</p>
+                    </div>
+                </div>
+                <button class="btn-p" style="padding: 10px 14px; font-size: 0.8rem; flex-shrink: 0; border-radius: 12px; box-shadow: 0 4px 12px rgba(37,99,235,0.25);" onclick="window.open('${j.link}', '_blank')"><i class="fas fa-external-link-alt"></i> Kunjungi</button>
+            </div>
+        `;
+    });
+}
+
+function setupGlobalStatsRealtimeListener() {
+    if(globalStatsListenerUnsubscribe) globalStatsListenerUnsubscribe();
+    globalStatsListenerUnsubscribe = fbDb.collection("pelamar").onSnapshot((snapshot) => {
+        let totalPelamar = snapshot.size;
+        globalPelamarTotalCount = totalPelamar;
+        
+        let statPubSubmitted = document.getElementById('statPubSubmitted');
+        if(statPubSubmitted) statPubSubmitted.innerText = totalPelamar;
+        
+        let statPubPelamar = document.getElementById('statPubPelamar');
+        if(statPubPelamar) statPubPelamar.innerText = totalPelamar; 
+    });
+}
+
+async function loadUserProfileFromFirestore(email) {
+    try {
+        const docSnap = await fbDb.collection("users_profile").doc(email).get();
+        if (docSnap.exists) { userProfile = docSnap.data(); } 
+        else { userProfile = { nama: "Pelamar Baru", wa: "", pendidikan: "SMA/SMK", pengalaman: "Belum ada pengalaman", lokasi: "Bandung", fotoUrl: "" }; }
+        loadProfileToUI();
+    } catch (e) { console.error("Gagal memuat profil dari Firestore:", e); }
+}
+
+function setupRealtimePelamarListener(email) {
+    if(realTimeListenerUnsubscribe) realTimeListenerUnsubscribe();
+    realTimeListenerUnsubscribe = fbDb.collection("pelamar").where("userEmail", "==", email).onSnapshot((snapshot) => {
+        pelamarList = [];
+        snapshot.forEach((doc) => { pelamarList.push({ firebaseId: doc.id, ...doc.data() }); });
+        renderDataForUser();
+    });
+}
+
+async function fetchAllPelamarForAdmin() {
+    try {
+        const querySnapshot = await fbDb.collection("pelamar").get();
+        pelamarList = [];
+        querySnapshot.forEach((doc) => { pelamarList.push({ firebaseId: doc.id, ...doc.data() }); });
+        renderDataForAdmin(); renderAdminCompanyStats();
+    } catch (error) { console.error("Gagal memuat seluruh data pelamar admin:", error); }
+}
+
+function updatePublicStats() {
+    let statPubJobs = document.getElementById('statPubJobs');
+    if(statPubJobs) {
+        let activeCount = allJobs.filter(j => {
+            let isExpired = j.deadline ? (new Date(j.deadline).setHours(23,59,59,999) < new Date()) : false;
+            return (j.isOpen !== false) && !isExpired;
+        }).length;
+        statPubJobs.innerText = activeCount > 0 ? activeCount : allJobs.length;
+    }
+}
+
+function requestUserLocation() {
+    let statusEl = document.getElementById('userGpsStatus');
+    if (!navigator.geolocation) { statusEl.innerText = "Geolocation tidak didukung oleh browser Anda."; return; }
+    statusEl.innerText = "Mendeteksi posisi GPS Anda...";
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            let lat = position.coords.latitude, lon = position.coords.longitude;
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=14&addressdetails=1`, { headers: { 'Accept-Language': 'id' } })
+            .then(res => res.json())
+            .then(data => {
+                let locationName = "Bandung Raya";
+                if(data && data.address) {
+                    let city = data.address.city || data.address.town || data.address.county || data.address.suburb || data.address.village || "";
+                    let state = data.address.state || "";
+                    locationName = city ? `${city}, ${state}` : data.display_name;
+                }
+                statusEl.innerText = `GPS Aktif: ${escapeHtml(locationName)} (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+                updateInteractiveMapEmbedByCoords(lat, lon, locationName);
+                showToast("📍 Lokasi GPS pelamar berhasil dideteksi dengan akurat!");
+            }).catch(err => {
+                statusEl.innerText = `GPS Aktif: Lat ${lat.toFixed(4)}, Lon ${lon.toFixed(4)}`;
+                updateInteractiveMapEmbed(lat, lon);
+                showToast("📍 Lokasi GPS pelamar berhasil dideteksi!");
+            });
+        },
+        (error) => {
+            statusEl.innerText = "Akses lokasi ditolak atau tidak aktif. Menampilkan peta default Bandung.";
+            updateInteractiveMapEmbed(-6.9034443, 107.5731163, "Bandung");
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+}
+
+function initInteractiveMap() { requestUserLocation(); renderMapJobList(); }
+function updateInteractiveMapEmbed(lat, lon) { let mapFrame = document.getElementById('mapFrame'); if(mapFrame) { mapFrame.src = `https://www.google.com/maps?q=${lat},${lon}(Posisi%20Anda)&z=15&output=embed`; } }
+function updateInteractiveMapEmbedByCoords(lat, lon, label) { let mapFrame = document.getElementById('mapFrame'); if(mapFrame) { mapFrame.src = `https://www.google.com/maps?q=${lat},${lon}(${encodeURIComponent(label)})&z=15&output=embed`; } }
+
+function renderMapJobList() {
+    let listContainer = document.getElementById('mapJobListContainer');
+    if(!listContainer) return;
+    let activeJobsWithMaps = allJobs.filter(j => j.maps && j.maps.trim() !== "");
+    if(activeJobsWithMaps.length === 0) { listContainer.innerHTML = `<p style="color: var(--muted); font-size: 0.85rem; text-align: center;">Belum ada loker yang mencantumkan link Google Maps.</p>`; return; }
+    listContainer.innerHTML = "";
+    activeJobsWithMaps.forEach(j => {
+        listContainer.innerHTML += `
+            <div style="background: var(--bg); padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                <div><h4 style="font-size: 0.9rem; font-weight: 800; color: var(--text); margin-bottom: 2px;">${escapeHtml(j.pos)}</h4><p style="font-size: 0.75rem; color: var(--primary); font-weight: 700; margin: 0;">${escapeHtml(j.pt)} • ${escapeHtml(j.lok)}</p></div>
+                <button class="btn-p" style="padding: 6px 12px; font-size: 0.75rem;" onclick="focusJobMapPin('${j.pt}', '${j.maps}')"><i class="fas fa-map-pin"></i> Pin Lokasi</button>
+            </div>
+        `;
+    });
+}
+
+function focusJobMapPin(ptName, mapsLink) {
+    let mapFrame = document.getElementById('mapFrame');
+    if(mapFrame) {
+        let embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(ptName + " Bandung Cimahi")}&output=embed`;
+        if(mapsLink && mapsLink.includes('q=')) {
+            let match = mapsLink.match(/q=([^&]+)/);
+            if(match && match[1]) { embedUrl = `https://www.google.com/maps?q=${match[1]}&output=embed`; }
+        }
+        mapFrame.src = embedUrl;
+        showToast(`📍 Menampilkan pin lokasi untuk ${ptName}!`);
+    }
+}
+
+function toggleAuthMode() {
+    isRegisterMode = !isRegisterMode;
+    let title = document.getElementById('authModalTitle'), sub = document.getElementById('authModalSub'), btn = document.getElementById('authSubmitBtn'), toggleTxt = document.getElementById('authToggleText'), toggleLink = document.getElementById('authToggleLink'), nameGroup = document.getElementById('fgAuthName'), forgotContainer = document.getElementById('forgotPasswordLinkContainer');
+    if(isRegisterMode) {
+        title.innerText = "Daftar Akun Pelamar"; sub.innerText = "Buat akun baru untuk melamar kerja."; btn.innerText = "Daftar Sekarang"; toggleTxt.innerText = "Sudah punya akun?"; toggleLink.innerText = "Masuk disini"; nameGroup.style.display = "block"; forgotContainer.style.display = "none";
+    } else {
+        title.innerText = "Masuk Akun Pelamar"; sub.innerText = "Masukkan akun Anda untuk melacak lamaran kerja."; btn.innerText = "Masuk Sekarang"; toggleTxt.innerText = "Belum punya akun?"; toggleLink.innerText = "Daftar di sini"; nameGroup.style.display = "none"; forgotContainer.style.display = "block";
+    }
+}
+
+async function submitAuthAction() {
+    let email = document.getElementById('authEmailInput').value.trim().toLowerCase();
+    let pass = document.getElementById('authPassInput').value.trim();
+    let name = document.getElementById('authNameInput').value.trim();
+    
+    if(!email || !pass) { showToast("Email dan Password wajib diisi!"); return; }
+
+    try {
+        if(isRegisterMode) {
+            if(!name) { showToast("Nama lengkap wajib diisi!"); return; }
+            await fbAuth.createUserWithEmailAndPassword(email, pass);
+            userProfile.nama = escapeHtml(name);
+            await fbDb.collection("users_profile").doc(email).set(userProfile);
+            loadProfileToUI(); 
+            document.getElementById('m-auth').checked = false; 
+            showToast("🎉 Pendaftaran Berhasil!");
+        } else {
+            await fbAuth.signInWithEmailAndPassword(email, pass);
+            
+            const daftarAdmin = ["barlok@lb.com"];
+            if (daftarAdmin.includes(email)) { 
+                document.getElementById('m-auth').checked = false; 
+                document.body.classList.add('admin-mode'); 
+                switchSection('adm'); 
+                showToast("Penyamaran berhasil! Selamat datang Komandan 😎"); 
+            } else {
+                document.getElementById('m-auth').checked = false; 
+                showToast("👋 Berhasil Masuk Akun Pelamar!");
+                await loadUserProfileFromFirestore(email);
+            }
+        }
+        document.getElementById('authEmailInput').value = ""; 
+        document.getElementById('authPassInput').value = ""; 
+    } catch (error) { 
+        showToast("Gagal Login: Email/Password salah."); 
+    }
+}
+
+async function handleForgotPassword() {
+    let email = document.getElementById('authEmailInput').value.trim();
+    if(!email) { showToast("Masukkan email Anda terlebih dahulu pada kolom email di atas!"); document.getElementById('authEmailInput').focus(); return; }
+    try { await fbAuth.sendPasswordResetEmail(email); showToast("📧 Link pemulihan sandi telah dikirim ke email Anda!"); } catch (error) { showToast("Gagal: " + error.message); }
+}
+
+async function logoutMember() {
+    try { await fbAuth.signOut(); if(realTimeListenerUnsubscribe) realTimeListenerUnsubscribe(); showToast("Berhasil keluar dari akun."); switchSection('home'); } catch (error) { showToast("Gagal keluar akun."); }
+}
+
+function toggleDarkMode(){
+    let html = document.documentElement; let current = html.getAttribute('data-theme'); let btn = document.getElementById('darkToggle'); let metaScheme = document.getElementById('meta-color-scheme');
+    if(current === 'dark') { html.setAttribute('data-theme', 'light'); html.style.colorScheme = 'light'; if(metaScheme) metaScheme.setAttribute('content', 'light'); btn.innerHTML = '<i class="fas fa-moon"></i>'; showToast("Tema Terang Aktif"); } 
+    else { html.setAttribute('data-theme', 'dark'); html.style.colorScheme = 'dark'; if(metaScheme) metaScheme.setAttribute('content', 'dark'); btn.innerHTML = '<i class="fas fa-sun"></i>'; showToast("Tema Gelap Aktif"); }
+}
+
+function updateFreshCounterBadge() {
+    let count = 0; let now = new Date(); now.setHours(23,59,59,999);
+    allJobs.forEach(j => {
+        if(j.createdAt) { let createdDate = new Date(j.createdAt); let diffDays = (now - createdDate) / (1000 * 60 * 60 * 24); if(diffDays >= 0 && diffDays <= 7) { count++; } }
+    });
+    if(count === 0 && allJobs.length > 0) { count = allJobs.filter(j => j.createdAt).length > 0 ? 1 : allJobs.length; }
+    let badge = document.getElementById('freshCounterBadge'); if(badge) badge.innerHTML = `<i class="fas fa-fire"></i> ${count} Loker Baru Minggu Ini`;
+}
+
+async function subscribeUser() {
+    let inputVal = document.getElementById('subscriberInput').value.trim();
+    if(!inputVal) { showToast("Masukkan Email atau No. WhatsApp Anda!"); return; }
+    let isEmail = inputVal.includes('@'); let isPhone = /^[0-9+\-\s()]{8,}$/.test(inputVal);
+    if(!isEmail && !isPhone) { showToast("Format email atau nomor WhatsApp kurang valid!"); return; }
+    try {
+        let btnSub = document.querySelector('.btn-sub'); if(btnSub) { btnSub.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Menyimpan...`; btnSub.disabled = true; }
+        await fbDb.collection("subscribers").add({ contact: escapeHtml(inputVal), type: isEmail ? "email" : "whatsapp", createdAt: new Date().toISOString() });
+        let subs = JSON.parse(localStorage.getItem('lb_subscribers')) || [];
+        if(!subs.includes(inputVal)) { subs.push(inputVal); localStorage.setItem('lb_subscribers', JSON.stringify(subs)); }
+        document.getElementById('subscriberInput').value = ""; showToast("🎉 Berhasil Berlangganan Notifikasi Loker Terbaru!");
+    } catch (err) { showToast("Berhasil disimpan secara lokal, selamat bergabung!"); } finally {
+        let btnSub = document.querySelector('.btn-sub'); if(btnSub) { btnSub.innerHTML = `<i class="fas fa-paper-plane"></i> Berlangganan`; btnSub.disabled = false; }
+    }
+}
+
+function selectLoc(val, txt) { currentLocFilter = val; document.getElementById('lbl-loc').innerHTML = txt + ' <i class="fas fa-chevron-down"></i>'; document.getElementById('m-loc').checked = false; filterJobs(); }
+function selectType(val, txt) { currentTypeFilter = val; document.getElementById('lbl-type').innerHTML = txt + ' <i class="fas fa-chevron-down"></i>'; document.getElementById('m-type').checked = false; filterJobs(); }
+function selectSort(val, txt) { currentSortFilter = val; document.getElementById('lbl-sort').innerHTML = txt + ' <i class="fas fa-chevron-down"></i>'; document.getElementById('m-sort').checked = false; filterJobs(); }
+
+function openMapsDirect(event, mapsLink, ptName) {
+    event.stopPropagation();
+    let finalUrl = mapsLink ? mapsLink : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ptName + " Bandung Cimahi")}`;
+    navigator.clipboard.writeText(finalUrl).then(() => { showToast("📍 Link Google Maps berhasil disalin & dibuka!"); }).catch(() => { showToast("Membuka Peta..."); });
+    window.open(finalUrl, '_blank');
+}
+
+function filterJobs(){
+    let keyword = document.getElementById('searchKeyword').value.toLowerCase(), locFilter = currentLocFilter.toLowerCase(), typeFilter = currentTypeFilter.toLowerCase();
+    filteredJobs = allJobs.filter(j => {
+        let matchKeyword = j.pos.toLowerCase().includes(keyword) || j.pt.toLowerCase().includes(keyword);
+        let matchLoc = locFilter === "" || j.lok.toLowerCase().includes(locFilter);
+        let matchType = typeFilter === "" || (j.type && j.type.toLowerCase().includes(typeFilter));
+        return matchKeyword && matchLoc && matchType;
+    });
+    filteredJobs.sort((a, b) => {
+        if(currentSortFilter === 'newest') { let dateA = a.createdAt ? new Date(a.createdAt).getTime() : (a.id || 0); let dateB = b.createdAt ? new Date(b.createdAt).getTime() : (b.id || 0); return dateB - dateA; } 
+        else if(currentSortFilter === 'oldest') { let dateA = a.createdAt ? new Date(a.createdAt).getTime() : (a.id || 0); let dateB = b.createdAt ? new Date(b.createdAt).getTime() : (b.id || 0); return dateA - dateB; } 
+        else if(currentSortFilter === 'deadline') { let dateA = a.deadline ? new Date(a.deadline).getTime() : 8640000000000; let dateB = b.deadline ? new Date(b.deadline).getTime() : 8640000000000; return dateA - dateB; } 
+        else { let dateA = a.createdAt ? new Date(a.createdAt).getTime() : (a.id || 0); let dateB = b.createdAt ? new Date(b.createdAt).getTime() : (b.id || 0); return dateB - dateA; }
+    });
+    currentPage = 1; renderJobList();
+}
+
+function resetToPageOne() {
+    switchSection('home'); document.getElementById('searchKeyword').value = "";
+    selectLoc("", "Semua Wilayah"); selectType("", "Semua Tipe"); selectSort("newest", "Terbaru (Default)");
+    filteredJobs = [...allJobs]; currentPage = 1; filterJobs();
+}
+
+function showToast(msg) { let t = document.getElementById('toast'); document.getElementById('toast-msg').innerText = msg; t.classList.add('show'); setTimeout(() => { t.classList.remove('show'); }, 3000); }
+function formatTanggal(ds) { if(!ds) return ""; let d = new Date(ds); let bulan = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"]; return `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`; }
+function formatWaktuLengkap(isoString) {
+    if(!isoString) return "-"; let d = new Date(isoString); if(isNaN(d.getTime())) return isoString;
+    return `${formatTanggal(d)} • ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
+}
+function checkManual(selectId, inputId) { let s = document.getElementById(selectId); let i = document.getElementById(inputId); if(s.value === 'Lainnya') { i.style.display = 'block'; i.focus(); } else { i.style.display = 'none'; i.value = ''; } }
+
+function switchSection(secName) { 
+    if(secName === 'adm') { 
+        if(!currentAuthUser || currentAuthUser.email !== 'barlok@lb.com') { document.getElementById('m-auth').checked = true; return; } 
+        fetchAllPelamarForAdmin(); 
+    }
+    if(secName === 'prof' && !currentAuthUser) { document.getElementById('m-auth').checked = true; return; }
+    document.body.setAttribute('data-active-sec', secName); window.scrollTo({ top: 0, behavior: 'smooth' }); 
+}
+
+function closeWelcomePopup() { let popup = document.getElementById('welcomePopup'); popup.style.opacity = '0'; popup.style.transition = 'opacity 0.3s ease'; setTimeout(() => { popup.style.display = 'none'; }, 300); }
+
+function renderJobList() {
+    let container = document.getElementById('job-list'); let totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+    if(currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+    if(totalPages === 0) { container.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); margin-top:2rem;">Tidak ada loker ditemukan.</p>'; document.getElementById('pagination-controls').innerHTML = ''; return; }
+    let start = (currentPage - 1) * jobsPerPage; let end = start + jobsPerPage; let paginatedJobs = filteredJobs.slice(start, end);
+
+    container.innerHTML = '';
+    paginatedJobs.forEach(j => {
+        let bP = j.isP ? `<span class="badge-prem"><i class="fas fa-star"></i> PREMIUM</span>` : ""; 
+        let bPin = j.isPin ? `<span style="color:#2563eb; margin-right:4px; font-size:1rem;" title="Loker Disematkan"><i class="fas fa-thumbtack"></i></span>` : ""; 
+        let bCounter = `<span class="badge-apply-counter"><i class="fas fa-user-check"></i> ${j.applyCount || 0}x Dilamar</span>`;
+        let isFresh = false; if (j.createdAt) { let createdDate = new Date(j.createdAt); let diffDays = (new Date() - createdDate) / (1000 * 60 * 60 * 24); if (diffDays <= 3) isFresh = true; }
+        let bFresh = isFresh ? `<span class="badge-fresh">🔥 Fresh</span>` : ""; 
+        let isExpired = j.deadline ? (new Date(j.deadline).setHours(23,59,59,999) < new Date()) : false; 
+        let finalStatusOpen = j.isOpen && !isExpired;
+        let bStatus = finalStatusOpen ? `<span class="badge-status open">🟢 Buka</span>` : `<span class="badge-status closed">🔴 Ditutup</span>`; 
+        let bDeadline = `<span class="badge-deadline"><i class="far fa-clock"></i> Tanpa Batas Waktu</span>`;
+        if (j.deadline) {
+            let deadlineDate = new Date(j.deadline); let today = new Date(); let diffDaysLeft = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
+            if (isExpired) bDeadline = `<span class="badge-deadline expired"><i class="far fa-clock"></i> Berakhir</span>`;
+            else if (diffDaysLeft <= 2 && diffDaysLeft >= 0) bDeadline = `<span class="badge-deadline urgent"><i class="fas fa-exclamation-triangle"></i> ${diffDaysLeft === 0 ? 'Hari Ini!' : diffDaysLeft + ' Hari Lagi'}</span>`;
+            else bDeadline = `<span class="badge-deadline"><i class="far fa-clock"></i> ${formatTanggal(j.deadline)}</span>`;
+        }
+        
+        let isSaved = savedJobs[j.id] ? true : false; let btnHtml = ''; let targetId = j.firebaseId || j.id;
+        if(finalStatusOpen) {
+            if(j.wa) { let copyMsg = generateProfessionalMessage(j.pos, j.pt, 'wa'); btnHtml += `<button class="btn-w" onclick="previewWA('${j.pos.replace(/'/g, "\\'")}', '${j.pt.replace(/'/g, "\\'")}', '${j.wa}')"><i class="fab fa-whatsapp"></i> WA</button><button class="btn-copy" onclick="event.stopPropagation(); navigator.clipboard.writeText('${copyMsg.replace(/'/g, "\\'")}').then(() => showToast('📋 Format pesan WA disalin!'));"><i class="fas fa-copy"></i> Salin</button>`; }
+            if(j.mail) { btnHtml += `<button class="btn-e" onclick="previewMail('${j.mail}', '${j.pos.replace(/'/g, "\\'")}', '${j.pt.replace(/'/g, "\\'")}', '${(j.subjek || '').replace(/'/g, "\\'")}')"><i class="fas fa-envelope"></i> Email</button>`; }
+        } else { btnHtml += `<span style="font-size:0.7rem; color:#ef4444; font-weight:700; align-self:center;"><i class="fas fa-ban"></i> Ditutup</span>`; }
+        btnHtml += `<button class="btn-m" style="background:#0ea5e9;" onclick="openMapsDirect(event, '${j.maps || ''}', '${j.pt}')"><i class="fas fa-map-marked-alt"></i> Peta Maps</button>`;
+        btnHtml += `<button class="btn-sh" onclick="shareToWA(event, '${targetId}', '${j.pos}', '${j.pt}', '${j.pend || 'SMA / SMK Sederajat'}')"><i class="fab fa-whatsapp"></i> Share</button><button class="btn-edit-job admin-only" onclick="editJobById('${targetId}')"><i class="fas fa-edit"></i> Edit</button><button class="btn-del-job admin-only" onclick="deleteJobById('${targetId}')"><i class="fas fa-trash"></i> Hapus</button>`;
+
+        let subjekTag = j.subjek ? `<span class="highlight-tag" style="color: var(--primary); background: rgba(37,99,235,0.08); border-color: rgba(37,99,235,0.2);"><i class="fas fa-envelope-open-text"></i> ${escapeHtml(j.subjek)}</span>` : "";
+
+        container.innerHTML += `<div class="card ${j.isP?'premium':''}" id="job-card-${j.id}" onclick="sDetById('${targetId}')"><button class="bm ${isSaved?'saved':''}" id="bm-${j.id}" onclick="toggleBookmarkById(event, '${targetId}')"><i class="${isSaved?'fas':'far'} fa-bookmark"></i></button><div style="padding-right: 30px; margin-bottom: 4px;"><div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;"><h3>${bPin}${escapeHtml(j.pos)}</h3> ${bFresh} ${bP}</div><div class="pt" style="margin-top:2px;">${escapeHtml(j.pt)} <i class="fas fa-check-circle verif"></i></div></div><div class="card-highlights">${subjekTag}${bCounter}<span class="highlight-tag"><i class="fas fa-graduation-cap" style="color:var(--primary);"></i> ${escapeHtml(j.pend || 'SMA/SMK')}</span><span class="highlight-tag"><i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> ${escapeHtml(j.lok)}</span></div><div class="status-badge-row">${bStatus} ${bDeadline}</div><div style="display:flex; justify-content: flex-end; align-items: center; font-size: 0.72rem; color: var(--muted); margin-bottom: 6px;"><span class="link-det"><i class="fas fa-arrow-right"></i> Detail & Catat</span></div><div class="card-actions-mobile" onclick="event.stopPropagation()">${btnHtml}</div></div>`;
+    });
+    renderPaginationControls(totalPages);
+}
+
+function renderPaginationControls(totalPages) {
+    let pContainer = document.getElementById('pagination-controls'); if (totalPages <= 1) { pContainer.innerHTML = ''; return; }
+    let html = `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})"><i class="fas fa-chevron-left"></i></button>`;
+    for(let i=1; i<=totalPages; i++) { html += `<button class="page-btn ${currentPage === i ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`; }
+    html += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})"><i class="fas fa-chevron-right"></i></button>`;
+    pContainer.innerHTML = html;
+}
+function changePage(p) { currentPage = p; renderJobList(); window.scrollTo({ top: document.querySelector('.search-container').offsetTop - 80, behavior: 'smooth' }); }
+
+function processOCR() {
+    const fileInput = document.getElementById('ocrFile'); const statusDiv = document.getElementById('ocrStatus'); const resultArea = document.getElementById('ocrResult');
+    if (!fileInput.files || !fileInput.files[0]) { showToast("Pilih foto loker terlebih dahulu!"); return; }
+    statusDiv.innerText = "⏳ Memindai gambar... Mohon tunggu."; resultArea.style.display = "block"; resultArea.value = "Membaca teks dari gambar...";
+    Tesseract.recognize( fileInput.files[0], 'ind', { logger: m => { if(m.status === 'recognizing text'){ statusDiv.innerText = `⏳ Membaca teks: ${Math.round(m.progress * 100)}%`; } } } ).then(({ data: { text } }) => { statusDiv.innerText = "✅ Selesai! Teks otomatis diisi ke kolom bawah."; resultArea.value = "Teks mentah berhasil dipilah."; autoFillForm(text); }).catch(err => { statusDiv.innerText = "❌ Gagal mengekstrak teks."; resultArea.value = ""; });
+}
+
+function autoFillForm(rawText) {
+    let lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0); let posisi = "", pt = "", lokasi = ""; let desc = [];
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i], lineUp = line.toUpperCase();
+        if ((lineUp.includes("PT") || lineUp.includes("PT.") || lineUp.includes("CV") || lineUp.includes("CV.")) && pt === "") { let match = line.match(/(?:PT\.?|CV\.?)\s+([A-Za-z0-9\s]+)/i); if (match) pt = match[0].trim(); else pt = line; }
+        if (lineUp.includes("DIBUTUHKAN") || lineUp.includes("POSISI") || lineUp.includes("OPERATOR") || lineUp.includes("LOWONGAN")) { if (posisi === "") { let cleanLine = line.replace(/(DIBUTUHKAN|POSISI|DICARI|LOWONGAN KERJA|LOWONGAN PEKERJAAN)\s*:?/ig, "").trim(); if (cleanLine.length > 3 && cleanLine.length < 50) { posisi = cleanLine; } else if (i + 1 < lines.length) { posisi = lines[i+1]; } } }
+        if (lineUp.includes("BANDUNG")) lokasi = "Bandung"; if (lineUp.includes("CIMAHI") || lineUp.includes("CIBALIGO")) lokasi = "Cimahi"; if (lineUp.includes("KBB") || lineUp.includes("PADALARANG")) lokasi = "KBB / Padalarang";
+        if (lineUp.includes("KUALIFIKASI") || lineUp.includes("SYARAT") || lineUp.includes("PENDIDIKAN") || lineUp.includes("PENGALAMAN") || lineUp.includes("USIA") || lineUp.match(/MAX|MIN|TAHUN/)) { desc.push(line); }
+    }
+    if (posisi) document.getElementById('jPos').value = posisi.replace(/^[^a-zA-Z0-9]+/, '').trim(); if (pt) document.getElementById('jPT').value = pt; if (lokasi) document.getElementById('jLokasi').value = lokasi;
+    if (desc.length > 0) { document.getElementById('jQual').value = desc.join("\n"); } else { document.getElementById('jQual').value = rawText; }
+}
+
+function downloadCSVTemplate() { 
+    let csvContent = `"Posisi","Nama PT","Lokasi","Subjek Email","Email HRD","Jenis"\n"Operator Produksi","PT ATEJA","Padalarang","Lamaran Operator - Nama Anda","hrd@ateja.co.id","Full-time"`; 
+    let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); let url = URL.createObjectURL(blob); let link = document.createElement("a"); link.setAttribute("href", url); link.setAttribute("download", "Template_Bulk_LokerBaraya.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast("Template CSV berhasil diunduh!"); 
+}
+
+function processCSVFileImport() { 
+    let fileInput = document.getElementById('csvFileInput'); if (!fileInput.files || !fileInput.files[0]) { showToast("Pilih file CSV terlebih dahulu!"); return; } 
+    let reader = new FileReader(); reader.onload = function(e) { parseAndImportLines(e.target.result); fileInput.value = ""; }; reader.readAsText(fileInput.files[0]); 
+}
+
+function processBulkImport() { 
+    let rawText = document.getElementById('bulkTextData').value.trim(); if (!rawText) { showToast("Kotak teks masih kosong!"); return; } parseAndImportLines(rawText); document.getElementById('bulkTextData').value = ""; 
+}
+
+async function parseAndImportLines(rawText) {
+    let lines = rawText.split('\n'); let importedCount = 0; let todayStr = new Date().toISOString().split('T')[0];
+    for (let idx = 0; idx < lines.length; idx++) {
+        let lineClean = lines[idx].trim(); if (!lineClean || idx === 0 && lineClean.toLowerCase().includes('posisi')) continue;
+        let parts = lineClean.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || lineClean.split(','); parts = parts.map(p => p.replace(/^"|"$/g, '').trim());
+        if (parts.length >= 2) {
+            jobIdCounter++; let pos = parts[0] || "Operator / Staff", pt = parts[1] || "Perusahaan", lok = parts[2] || "Bandung Raya", subjek = parts[3] || `Lamaran ${pos} - Nama`, mail = parts[4] || "", type = parts[5] || "Full-time";
+            let newJob = { id: jobIdCounter, pos: escapeHtml(pos), pt: escapeHtml(pt), lok: escapeHtml(lok), type: escapeHtml(type), subjek: escapeHtml(subjek), pend: "SMA/SMK", ind: "Pabrik / Manufaktur", isP: false, isPin: false, isOpen: true, createdAt: todayStr, deadline: "", wa: "", mail: mail, web: "", maps: "", desc: "", qual: `Kualifikasi standar untuk posisi ${pos}.`, ben: "", applyCount: 0 };
+            try { await fbDb.collection("jobs").add(newJob); importedCount++; } catch (err) { console.error(err); }
+        }
+    }
+    if (importedCount > 0) { await fetchJobsFromFirebase(); showToast(`Berhasil mengimpor ${importedCount} loker! 🎉`); } else { showToast("Format salah atau file kosong."); }
+}
+
+async function sendBroadcastNotificationToSubscribers(posisi, pt) {
+    try {
+        let subs = JSON.parse(localStorage.getItem('lb_subscribers')) || [];
+        if(subs.length > 0) { await fbDb.collection("notifications").add({ title: "🔥 Loker Baru: " + posisi, body: "Perusahaan " + pt + " baru saja membuka lowongan. Cek sekarang!", createdAt: new Date().toISOString() }); }
+    } catch (err) { console.error("Gagal mengirim broadcast notifikasi:", err); }
+}
+
+function generateAndDownloadPoster(jobIdRef = null) {
+    let p, c, lok, type, pend, subjek, wa, mail, deadline, qualText;
+    if(jobIdRef) {
+        let jobObj = allJobs.find(x => (x.firebaseId === jobIdRef || x.id == jobIdRef));
+        if(jobObj) { p = jobObj.pos; c = jobObj.pt; lok = jobObj.lok || "Bandung Raya"; type = jobObj.type || "Full-time"; pend = jobObj.pend || "SMA/SMK"; subjek = jobObj.subjek || `Lamaran ${p} - Nama`; wa = jobObj.wa || ""; mail = jobObj.mail || ""; deadline = jobObj.deadline || ""; qualText = jobObj.qual || "Kualifikasi sesuai standar perusahaan."; }
+    }
+    if(!p) {
+        let posEl = document.getElementById('jPos'), ptEl = document.getElementById('jPT');
+        if(!posEl || !ptEl || !posEl.value.trim() || !ptEl.value.trim()) { showToast("Posisi & Perusahaan wajib diisi untuk membuat poster!"); return; }
+        p = posEl.value.trim(); c = ptEl.value.trim(); lok = document.getElementById('jLokasi').value.trim() || "Bandung Raya"; type = document.getElementById('jType').value || "Full-time";
+        let pendRaw = document.getElementById('jPend').value; pend = pendRaw === "Lainnya" ? (document.getElementById('jPendManual').value || "Lainnya") : pendRaw;
+        subjek = document.getElementById('jSubjek').value.trim() || `Lamaran ${p} - Nama`; wa = document.getElementById('jWa').value.trim(); mail = document.getElementById('jMail').value.trim(); deadline = document.getElementById('jDeadline').value.trim(); qualText = document.getElementById('jQual').value.trim() || "Kualifikasi sesuai standar perusahaan.";
+    }
+
+    let canvas = document.getElementById('posterCanvas'); if(!canvas) return; let ctx = canvas.getContext('2d');
+    canvas.width = 1080; canvas.height = 1350; ctx.textBaseline = "top"; ctx.textAlign = "left";
+    let bgGrad = ctx.createLinearGradient(0, 0, 1080, 1350); bgGrad.addColorStop(0, '#0f172a'); bgGrad.addColorStop(0.5, '#1e3a8a'); bgGrad.addColorStop(1, '#0284c7');
+    ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, 1080, 1350);
+
+    ctx.save(); ctx.translate(540, 675); ctx.rotate(-25 * Math.PI / 180); ctx.font = '900 150px "Plus Jakarta Sans", sans-serif'; ctx.fillStyle = 'rgba(15, 23, 42, 0.08)'; ctx.strokeStyle = 'rgba(15, 23, 42, 0.06)'; ctx.lineWidth = 1; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText("LOKERBARAYA", 0, 0); ctx.strokeText("LOKERBARAYA", 0, 0); ctx.restore();
+
+    const cardX = 60, cardY = 60, cardWidth = 960, cardHeight = 1200;
+    ctx.fillStyle = '#ffffff'; roundRect(ctx, cardX, cardY, cardWidth, cardHeight, 32, true, false);
+    ctx.fillStyle = '#2563eb'; roundRect(ctx, cardX + 45, cardY + 45, 220, 50, 25, true, false);
+    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif'; ctx.textAlign = 'left'; ctx.fillText("💼 LokerBaraya", cardX + 70, cardY + 59);
+
+    ctx.fillStyle = '#eff6ff'; roundRect(ctx, cardX + cardWidth - 215, cardY + 45, 170, 50, 25, true, false);
+    ctx.fillStyle = '#1d4ed8'; ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif'; ctx.fillText(type, cardX + cardWidth - 185, cardY + 59);
+
+    ctx.fillStyle = '#2563eb'; ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif'; ctx.fillText(c.toUpperCase(), cardX + 45, cardY + 120);
+    ctx.fillStyle = '#0f172a'; ctx.font = '800 38px "Plus Jakarta Sans", sans-serif'; let nextY = wrapText(ctx, p, cardX + 45, cardY + 155, 870, 46);
+
+    let gridY = Math.max(nextY + 20, cardY + 260), boxW = 425, boxH = 90;
+    drawInfoBoxCanvas(ctx, cardX + 45, gridY, boxW, boxH, "📍 PENEMPATAN", lok); drawInfoBoxCanvas(ctx, cardX + 490, gridY, boxW, boxH, "⏳ BATAS WAKTU", deadline ? formatTanggal(deadline) : "Tanpa Batas Waktu");
+
+    let qualY = gridY + boxH + 15, qualW = 870, qualH = 210;
+    ctx.fillStyle = '#f8fafc'; roundRect(ctx, cardX + 45, qualY, qualW, qualH, 16, true, true); ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = '#2563eb'; ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif'; ctx.fillText("✔ KUALIFIKASI & PERSYARATAN:", cardX + 70, qualY + 18);
+
+    ctx.fillStyle = '#334155'; ctx.font = '600 17px "Plus Jakarta Sans", sans-serif'; let qualLines = qualText.split('\n').slice(0, 3); let qTextY = qualY + 52;
+    qualLines.forEach(line => { ctx.fillText("• " + line.replace(/^[-•*]\s*/, ''), cardX + 70, qTextY); qTextY += 28; });
+
+    let contactY = qualY + qualH + 15, contactW = 870, contactH = 95;
+    ctx.fillStyle = '#f1f5f9'; roundRect(ctx, cardX + 45, contactY, contactW, contactH, 16, true, false); ctx.strokeStyle = '#cbd5e1'; ctx.stroke();
+    ctx.fillStyle = '#475569'; ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif'; ctx.fillText("KIRIMKAN BERKAS LAMARAN MELALUI:", cardX + 70, contactY + 15);
+
+    ctx.fillStyle = '#0f172a'; ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif'; let contactStr = "";
+    if(wa) contactStr += `📱 WA: ${wa}   `; if(mail) contactStr += `📧 Email: ${mail}`; if(!contactStr) contactStr = "Lihat detail lengkap di portal LokerBaraya";
+    ctx.fillText(contactStr, cardX + 70, contactY + 48);
+
+    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif'; ctx.textAlign = 'center'; ctx.fillText("🌟 Portal Informasi Lowongan Kerja Terpercaya Bandung Raya 🌟", 540, 1300);
+
+    try { let dataUrl = canvas.toDataURL('image/png'); let link = document.createElement('a'); link.download = `Poster_Loker_${p.replace(/\s+/g, '_')}.png`; link.href = dataUrl; link.click(); showToast("🎨 Poster berhasil dibuat & diunduh!"); } catch(err) { showToast("Gagal mengunduh poster, pastikan browser mengizinkan unduhan."); }
+}
+
+function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+    let r = typeof radius === 'number' ? {tl: radius, tr: radius, br: radius, bl: radius} : radius;
+    ctx.beginPath(); ctx.moveTo(x + r.tl, y); ctx.lineTo(x + width - r.tr, y); ctx.quadraticCurveTo(x + width, y, x + width, y + r.tr); ctx.lineTo(x + width, y + height - r.br); ctx.quadraticCurveTo(x + width, y + height, x + width - r.br, y + height); ctx.lineTo(x + r.bl, y + height); ctx.quadraticCurveTo(x, y + height, x, y + height - r.bl); ctx.lineTo(x, y + r.tl); ctx.quadraticCurveTo(x, y, x + r.tl, y); ctx.closePath();
+    if (fill) ctx.fill(); if (stroke) ctx.stroke();
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    let words = text.split(' '), line = '', currentY = y;
+    for(let n = 0; n < words.length; n++) { let testLine = line + words[n] + ' '; let metrics = ctx.measureText(testLine); let testWidth = metrics.width; if (testWidth > maxWidth && n > 0) { ctx.fillText(line, x, currentY); line = words[n] + ' '; currentY += lineHeight; } else { line = testLine; } }
+    ctx.fillText(line, x, currentY); return currentY;
+}
+
+function drawInfoBoxCanvas(ctx, x, y, w, h, title, val) {
+    ctx.fillStyle = '#f8fafc'; roundRect(ctx, x, y, w, h, 14, true, true); ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = '#64748b'; ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif'; ctx.fillText(title, x + 18, y + 14);
+    ctx.fillStyle = '#0f172a'; ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif'; ctx.fillText(val.length > 32 ? val.substring(0, 29) + "..." : val, x + 18, y + 45);
+}
+
+function toggleBookmarkById(event, id) { 
+    event.stopPropagation(); let j = allJobs.find(x => x.firebaseId === id || x.id == id); if(!j) return; let k = j.firebaseId || j.id;
+    if(savedJobs[k]){ delete savedJobs[k]; showToast("Loker dihapus dari simpanan."); } else { savedJobs[k] = { ...j, note: "" }; showToast("Loker berhasil disimpan!"); } 
+    localStorage.setItem('lb_saved', JSON.stringify(savedJobs)); renderJobList(); renderSavedJobs(); 
+}
+
+function renderSavedJobs() {
+    let container = document.getElementById('saved-job-list'); if(!container) return; let keys = Object.keys(savedJobs);
+    if(keys.length === 0) { container.innerHTML = `<p style="color:var(--muted); text-align:center; margin-top:2rem;">Belum ada loker tersimpan.</p>`; return; }
+    container.innerHTML = "";
+    keys.forEach(k => {
+        let j = savedJobs[k]; let targetId = j.firebaseId || j.id;
+        container.innerHTML += `
+            <div class="card" style="margin-bottom: 12px;" onclick="sDetById('${targetId}')">
+                <h3>${escapeHtml(j.pos)}</h3><div class="pt">${escapeHtml(j.pt)}</div><p style="font-size:0.8rem; color:var(--muted); margin: 6px 0;">📍 ${escapeHtml(j.lok)} | 📌 Catatan: ${escapeHtml(j.note) || 'Belum ada catatan'}</p>
+                <div style="display:flex; gap:6px; margin-top:8px;"><button class="btn-note" onclick="openNoteModal(event, '${k}')"><i class="fas fa-sticky-note"></i> Catatan</button><button class="btn-e" onclick="toggleBookmarkById(event, '${targetId}')"><i class="fas fa-trash"></i> Hapus</button></div>
+            </div>`;
+    });
+}
+
+function openNoteModal(event, id) { event.stopPropagation(); let j = savedJobs[id]; if(!j) return; document.getElementById('noteJobId').value = id; document.getElementById('note-job-title').innerText = `${j.pos} di ${j.pt}`; document.getElementById('noteContentInput').value = j.note || ""; document.getElementById('m-note').checked = true; }
+function saveJobNote() { let id = document.getElementById('noteJobId').value; let noteText = document.getElementById('noteContentInput').value.trim(); if(savedJobs[id]) { savedJobs[id].note = escapeHtml(noteText); localStorage.setItem('lb_saved', JSON.stringify(savedJobs)); renderSavedJobs(); showToast("Catatan berhasil disimpan!"); } document.getElementById('m-note').checked = false; }
+
+function shareToWA(event, id, pos, pt, pend) { 
+    event.stopPropagation(); let baseUrl = window.location.href.split('?')[0]; let directLink = `${baseUrl}?job=${id}`;
+    let text = `📢 Informasi Lowongan Kerja\n\n🏢 Perusahaan   : *${pt}*\n👥 Kualifikasi : Pria / Wanita\n👷‍♂ Posisi : *${pos}*\n🎓 Pendidikan : ${pend}\n\n👉 Lihat detail & lamar langsung di sini:\n🔗 ${directLink}`; 
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank'); 
+}
+
+function generateProfessionalMessage(p, c, type = 'wa') {
+    let cvNote = `Berkas data diri lengkap siap saya lampirkan sesuai kebutuhan perusahaan.`;
+    if(type === 'wa') return `Yth. Bapak/Ibu HRD ${c},\n\nSelamat pagi/siang. Melalui informasi lowongan kerja dari portal LokerBaraya, perkenalkan saya *${userProfile.nama}*, lulusan ${userProfile.pendidikan} dengan rekam jejak pengalaman sebagai ${userProfile.pengalaman}.\n\nSaya memiliki minat dan kualifikasi yang kuat untuk berkontribusi secara optimal pada posisi *${p}* di ${c}. ${cvNote}\n\nBesar harapan saya untuk diberikan kesempatan mengikuti tahap wawancara guna menjelaskan kompetensi saya secara langsung.\n\nAtas waktu dan perhatian Bapak/Ibu, saya ucapkan terima kasih.\n\nHormat saya,\n*${userProfile.nama}*`;
+    else return `Yth. Bapak/Ibu HRD\n${c}\ndi Tempat\n\nDengan hormat,\n\nMelalui informasi lowongan dari LokerBaraya:\n• Nama: ${userProfile.nama}\n• Pendidikan: ${userProfile.pendidikan}\n• Pengalaman: ${userProfile.pengalaman}\n\nDengan ini mengajukan lamaran pekerjaan guna mengisi posisi *${p}* di ${c}.\n\nDemikian surat lamaran ini saya sampaikan. Terima kasih.\n\nHormat saya,\n${userProfile.nama}\nNo. WhatsApp: ${userProfile.wa || '-'}`;
+}
+
+function previewWA(p, c, w){ 
+    event.stopPropagation(); let msg = generateProfessionalMessage(p, c, 'wa'); document.getElementById('previewTextContent').value = msg; 
+    let formattedWa = w.trim(); if (formattedWa.startsWith('0')) { formattedWa = '62' + formattedWa.substring(1); } else if (!formattedWa.startsWith('62') && !formattedWa.startsWith('+') && formattedWa !== '') { formattedWa = '62' + formattedWa; }
+    pendingSendCallback = function() { window.open(`https://api.whatsapp.com/send?phone=${formattedWa}&text=${encodeURIComponent(msg)}`, '_blank'); }; 
+    document.getElementById('m-preview').checked = true; 
+}
+
+function previewMail(m, p, c, s){ 
+    event.stopPropagation(); let bodyMsg = generateProfessionalMessage(p, c, 'mail'); document.getElementById('previewTextContent').value = bodyMsg; let subject = s || `Lamaran Pekerjaan - ${p} - ${userProfile.nama}`; 
+    pendingSendCallback = function() { window.open(`mailto:${m}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyMsg)}`, '_blank'); }; document.getElementById('m-preview').checked = true; 
+}
+
+function executeSendAction() { document.getElementById('m-preview').checked = false; if(pendingSendCallback) { pendingSendCallback(); showToast("Membuka aplikasi pengiriman pesan..."); } }
+
+function outAdmin() { 
+    document.body.classList.remove('admin-mode'); 
+    fbAuth.signOut(); 
+    switchSection('home'); 
+    showToast("Berhasil Keluar. Sesi berakhir 🤫"); 
+}
+
+function sDetById(id){
+    let j = allJobs.find(x => x.firebaseId === id || x.id == id || String(x.id) === String(id)); if(!j) return; event.stopPropagation(); currentSelectedJob = j;
+    let bPin = j.isPin ? `<span style="color:#2563eb; margin-right:8px;" title="Disematkan"><i class="fas fa-thumbtack"></i></span>` : "";
+    document.getElementById('d-pos').innerHTML = bPin + escapeHtml(j.pos); document.getElementById('d-prem-badge').innerHTML = j.isP ? '<span class="badge-prem"><i class="fas fa-star"></i> PREMIUM</span>' : ''; document.getElementById('d-pt').innerText = j.pt;
+    let isExpired = j.deadline ? (new Date(j.deadline).setHours(23,59,59,999) < new Date()) : false; let finalStatusOpen = j.isOpen && !isExpired;
+    document.getElementById('d-status-badge').innerHTML = finalStatusOpen ? `<span class="badge-status open">🟢 Lowongan Buka</span>` : `<span class="badge-status closed">🔴 Lowongan Ditutup</span>`;
+    document.getElementById('d-deadline-badge').innerHTML = j.deadline ? `<span class="badge-deadline ${isExpired ? 'expired' : ''}"><i class="far fa-clock"></i> Batas: ${formatTanggal(j.deadline)}</span>` : `<span class="badge-deadline"><i class="far fa-clock"></i> Tanpa Batas Waktu</span>`;
+    document.getElementById('d-lok').innerText=j.lok; document.getElementById('d-gaji').innerText=j.subjek || '-'; document.getElementById('d-pend').innerText = j.pend || "SMA/SMK"; document.getElementById('d-ind').innerText = j.ind || "Umum / Lainnya"; 
+    
+    let descBox = document.getElementById('d-desc-box'); if(j.desc && j.desc.trim() !== "") { descBox.style.display = "block"; document.getElementById('d-desc').innerText = j.desc; } else { descBox.style.display = "none"; }
+    let qualBox = document.getElementById('d-qual-box'); if(j.qual && j.qual.trim() !== "") { qualBox.style.display = "block"; document.getElementById('d-qual').innerText = j.qual; } else { qualBox.style.display = "block"; document.getElementById('d-qual').innerText = j.desc || "-"; }
+    let benBox = document.getElementById('d-ben-box'); if(j.ben && j.ben.trim() !== "") { benBox.style.display = "block"; document.getElementById('d-ben').innerText = j.ben; } else { benBox.style.display = "none"; }
+
+    let applyBtn = document.getElementById('btn-apply-modal'), targetId = j.firebaseId || j.id;
+    if(finalStatusOpen) { applyBtn.disabled = false; applyBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Catat Lamaran Saya (Tracker)'; applyBtn.style.background = 'linear-gradient(135deg, #2563eb, #1d4ed8)'; applyBtn.style.cursor = 'pointer'; } 
+    else { applyBtn.disabled = true; applyBtn.innerHTML = '<i class="fas fa-times-circle"></i> Lowongan Sudah Ditutup (Deadline)'; applyBtn.style.background = '#94a3b8'; applyBtn.style.cursor = 'not-allowed'; }
+    
+    let actHtml = '';
+    if(finalStatusOpen) {
+        if(j.wa) actHtml += `<button class="btn-w" onclick="previewWA('${j.pos.replace(/'/g, "\\'")}', '${j.pt.replace(/'/g, "\\'")}', '${j.wa}')"><i class="fab fa-whatsapp"></i> WA</button>`;
+        if(j.mail) actHtml += `<button class="btn-e" onclick="previewMail('${j.mail}', '${j.pos.replace(/'/g, "\\'")}', '${j.pt.replace(/'/g, "\\'")}', '${(j.subjek || '').replace(/'/g, "\\'")}')"><i class="fas fa-envelope"></i> Email</button>`;
+    } else { actHtml += `<span style="font-size:0.8rem; color:#ef4444; font-weight:700;"><i class="fas fa-ban"></i> Lowongan sudah berakhir.</span>`; }
+    actHtml += `<button class="btn-m" style="background:#0ea5e9;" onclick="openMapsDirect(event, '${j.maps || ''}', '${j.pt}')"><i class="fas fa-map-marked-alt"></i> Peta Maps</button><button class="btn-sh" onclick="shareToWA(event, '${targetId}', '${j.pos}', '${j.pt}', '${j.pend || 'SMA / SMK Sederajat'}')"><i class="fab fa-whatsapp"></i> Share WA</button>`;
+    
+    document.getElementById('d-actions').innerHTML = actHtml; document.getElementById('m-det').checked = true;
+}
+
+function openApplyModal() { 
+    if(!currentAuthUser) { document.getElementById('m-det').checked = false; document.getElementById('m-auth').checked = true; showToast("Silakan masuk akun terlebih dahulu untuk mencatat lamaran!"); return; }
+    if(!currentSelectedJob) return; let isExpired = currentSelectedJob.deadline ? (new Date(currentSelectedJob.deadline).setHours(23,59,59,999) < new Date()) : false;
+    if(!currentSelectedJob.isOpen || isExpired) { showToast("Maaf, lowongan ini sudah melewati batas waktu (deadline)!"); return; }
+    document.getElementById('m-det').checked = false; document.getElementById('apply-job-title').innerText = `${currentSelectedJob.pos} di ${currentSelectedJob.pt}`; document.getElementById('appNama').value = userProfile.nama || ""; document.getElementById('appWa').value = userProfile.wa || ""; document.getElementById('appPend').value = userProfile.pendidikan || ""; document.getElementById('m-apply').checked = true; 
+}
+
+async function submitApplication() { 
+    let nama = document.getElementById('appNama').value.trim(), wa = document.getElementById('appWa').value.trim(); 
+    if(!nama || !wa) { showToast("Nama dan No. WhatsApp wajib diisi!"); return; } 
+    let submitBtn = document.getElementById('btnSubmitApp'); submitBtn.innerText = "Menyimpan..."; submitBtn.disabled = true;
+    let newPelamar = { id: Date.now(), userEmail: currentAuthUser.email, nama: escapeHtml(nama), wa: escapeHtml(wa), posisi: `${escapeHtml(currentSelectedJob.pos)} (${escapeHtml(currentSelectedJob.pt)})`, createdAt: new Date().toISOString() }; 
+    try {
+        await fbDb.collection("pelamar").add(newPelamar);
+        await recordCvUserActivity(nama, wa, currentAuthUser.email);
+        if(currentSelectedJob.firebaseId) { let currentCount = currentSelectedJob.applyCount || 0; let newCount = currentCount + 1; await fbDb.collection("jobs").doc(currentSelectedJob.firebaseId).update({ applyCount: newCount }); currentSelectedJob.applyCount = newCount; await fetchJobsFromFirebase(); }
+        document.getElementById('m-apply').checked = false; showToast("🎉 Riwayat lamaran berhasil dicatat di Tracker!"); 
+    } catch(err) { showToast("Gagal menyimpan ke database."); } finally { submitBtn.innerText = "Simpan ke Tracker Saya"; submitBtn.disabled = false; }
+}
+
+function prepareAdminPost() { resetJobForm(); document.getElementById('modal-post-title').innerText = "Tambah Loker Admin"; document.getElementById('submitJobBtnText').innerText = "Publikasi Loker"; }
+
+async function aJob(){
+    let editId = document.getElementById('editJobId').value; 
+    let p = document.getElementById('jPos').value, c = document.getElementById('jPT').value, lok = document.getElementById('jLokasi').value||"Bandung Raya"; let type = document.getElementById('jType').value||"Full-time";
+    let pendRaw = document.getElementById('jPend').value; let pend = pendRaw === "Lainnya" ? (document.getElementById('jPendManual').value || "Lainnya") : pendRaw;
+    let indRaw = document.getElementById('jInd').value; let ind = indRaw === "Lainnya" ? (document.getElementById('jIndManual').value || "Lainnya") : indRaw;
+    let desc = document.getElementById('jDesc').value || "", qual = document.getElementById('jQual').value.trim(), ben = document.getElementById('jBen').value || "", mapsUrl = document.getElementById('jMaps').value.trim(), subjek = document.getElementById('jSubjek').value.trim() || `Lamaran ${p} - Nama`;
+    let wa = document.getElementById('jWa').value, mail = document.getElementById('jMail').value, web = document.getElementById('jWeb').value, deadline = document.getElementById('jDeadline').value, todayStr = new Date().toISOString().split('T')[0];
+    let isP = document.getElementById('jPrem').checked, isPin = document.getElementById('jPin').checked, isOpen = document.getElementById('jIsOpen').checked;
+    if(!p || !c) return showToast("Posisi & Perusahaan wajib diisi!"); if(!qual) return showToast("Kualifikasi wajib diisi!");
+    
+    let jobData = { id: Date.now(), pos: escapeHtml(p), pt: escapeHtml(c), lok: escapeHtml(lok), type: escapeHtml(type), subjek: escapeHtml(subjek), pend: escapeHtml(pend), ind: escapeHtml(ind), isP: isP, isPin: isPin, isOpen: isOpen, createdAt: todayStr, deadline: deadline, wa: wa, mail: mail, web: web, maps: mapsUrl, desc: escapeHtml(desc), qual: escapeHtml(qual), ben: escapeHtml(ben), applyCount: 0 };
+    try {
+        if(editId) { delete jobData.id; delete jobData.applyCount; await fbDb.collection("jobs").doc(editId).update(jobData); showToast("Loker Berhasil Diperbarui di Cloud!"); } 
+        else { await fbDb.collection("jobs").add(jobData); await sendBroadcastNotificationToSubscribers(p, c); showToast("Loker Berhasil Dipublikasikan!"); }
+        await fetchJobsFromFirebase();
+    } catch (err) { showToast("Gagal menyimpan ke database!"); }
+    document.getElementById('m-post').checked=false; resetJobForm();
+}
+
+function editJobById(id) {
+    event.stopPropagation(); let j = allJobs.find(x => x.firebaseId === id || x.id == id); if(!j) return;
+    document.getElementById('editJobId').value = j.firebaseId || id; document.getElementById('modal-post-title').innerText = "Edit Loker"; document.getElementById('submitJobBtnText').innerText = "Perbarui Loker"; 
+    document.getElementById('jDeadline').value = j.deadline || ""; document.getElementById('jPos').value = j.pos; document.getElementById('jPT').value = j.pt; document.getElementById('jLokasi').value = j.lok; document.getElementById('jType').value = j.type || "Full-time";
+    
+    let pendSelect = document.getElementById('jPend'); let pendOptions = Array.from(pendSelect.options).map(o => o.value); 
+    if(!pendOptions.includes(j.pend) && j.pend) { pendSelect.value = 'Lainnya'; document.getElementById('jPendManual').style.display = 'block'; document.getElementById('jPendManual').value = j.pend; } else { pendSelect.value = j.pend || "SMA/SMK"; document.getElementById('jPendManual').style.display = 'none'; }
+    let indSelect = document.getElementById('jInd'); let indOptions = Array.from(indSelect.options).map(o => o.value); 
+    if(!indOptions.includes(j.ind) && j.ind) { indSelect.value = 'Lainnya'; document.getElementById('jIndManual').style.display = 'block'; document.getElementById('jIndManual').value = j.ind; } else { indSelect.value = j.ind || "F&B"; document.getElementById('jIndManual').style.display = 'none'; }
+    
+    document.getElementById('jMaps').value = j.maps || ""; document.getElementById('jDesc').value = j.desc || ""; document.getElementById('jQual').value = j.qual || j.desc || ""; document.getElementById('jBen').value = j.ben || ""; document.getElementById('jSubjek').value = j.subjek || ""; document.getElementById('jWa').value = j.wa || ""; document.getElementById('jMail').value = j.mail || ""; document.getElementById('jWeb').value = j.web || "";
+    document.getElementById('jPrem').checked = j.isP; document.getElementById('jPin').checked = j.isPin || false; document.getElementById('jIsOpen').checked = j.isOpen === undefined ? true : j.isOpen; document.getElementById('ocrBoxContainer').style.display = "none"; document.getElementById('m-post').checked = true;
+}
+
+async function deleteJobById(id) { event.stopPropagation(); if(confirm("Yakin ingin menghapus loker ini dari Cloud?")) { try { await fbDb.collection("jobs").doc(id).delete(); showToast("Loker berhasil dihapus!"); await fetchJobsFromFirebase(); } catch(err) { showToast("Gagal menghapus dari database."); } } }
+
+function resetJobForm() {
+    document.getElementById('editJobId').value = ''; document.getElementById('ocrBoxContainer').style.display = "block"; document.getElementById('jDeadline').value=''; document.getElementById('jPos').value=''; document.getElementById('jPT').value=''; document.getElementById('jLokasi').value=''; document.getElementById('jDesc').value=''; document.getElementById('jQual').value=''; document.getElementById('jBen').value=''; document.getElementById('jMaps').value=''; document.getElementById('jSubjek').value='';
+    document.getElementById('jPend').value='SMA/SMK'; document.getElementById('jPendManual').style.display='none'; document.getElementById('jPendManual').value=''; document.getElementById('jInd').value='F&B'; document.getElementById('jIndManual').style.display='none'; document.getElementById('jIndManual').value='';
+    document.getElementById('jWa').value='';document.getElementById('jMail').value=''; document.getElementById('jWeb').value=''; document.getElementById('jPrem').checked=false; document.getElementById('jPin').checked=false; document.getElementById('jIsOpen').checked=true; document.getElementById('ocrResult').value = ""; document.getElementById('ocrResult').style.display = "none"; document.getElementById('ocrStatus').innerText = "";
+}
+
+function exportToCSV(){
+    if(pelamarList.length === 0){showToast("Belum ada data pelamar untuk diekspor.");return;}
+    let csvContent = "data:text/csv;charset=utf-8,Nama Pelamar,Posisi & PT,Waktu Kirim,No WA\n"; pelamarList.forEach(item => { csvContent += `"${item.nama}","${item.posisi}","${item.createdAt || '-'}","${item.wa || '-'}"\n`; });
+    let encodedUri = encodeURI(csvContent); let link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "Data_Pelamar_LokerBaraya.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast("Data CSV berhasil diunduh!");
+}
+
+function renderDataForUser() {
+    let tr = document.getElementById('track-list'); if(pelamarList.length === 0){ tr.innerHTML = `Belum ada riwayat lamaran yang dicatat.`; return; }
+    tr.innerHTML = "";
+    pelamarList.forEach(item => { tr.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border);"><div><b>${escapeHtml(item.posisi)}</b><br><small style="color:var(--muted)">${formatWaktuLengkap(item.createdAt)}</small></div><span class="status-badge" style="background:rgba(16,185,129,0.1); color:#10b981;">Terkirim</span></div>`; });
+}
+
+function renderDataForAdmin() {
+    let tb = document.getElementById('tb-pel'); document.getElementById('t-loker').innerText = allJobs.length; document.getElementById('t-pel').innerText = pelamarList.length;
+    let sortVal = document.getElementById('adminSortSelect').value; let sortedList = [...pelamarList];
+    if(sortVal === 'az') { sortedList.sort((a, b) => (a.nama || "").localeCompare(b.nama || "")); } else if(sortVal === 'za') { sortedList.sort((a, b) => (b.nama || "").localeCompare(a.nama || "")); } else if(sortVal === 'most_applied') { sortedList.sort((a, b) => (b.posisi || "").localeCompare(a.posisi || "")); } else { sortedList.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)); }
+    if(sortedList.length === 0){ tb.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--muted);">Belum ada pelamar.</td></tr>`; return; }
+    tb.innerHTML = "";
+    sortedList.forEach(item => {
+        let rawWa = item.wa || "", cleanWa = rawWa.trim();
+        if (cleanWa.startsWith('0')) { cleanWa = '62' + cleanWa.substring(1); } else if (!cleanWa.startsWith('62') && !cleanWa.startsWith('+') && cleanWa !== '') { cleanWa = '62' + cleanWa; }
+        tb.innerHTML += `<tr><td><b>${escapeHtml(item.nama)}</b><br><small style="color:var(--muted); word-break:break-all;">${escapeHtml(item.userEmail || '-')}</small></td><td>${escapeHtml(item.posisi)}</td><td style="font-size:0.75rem; font-weight:600; color:var(--muted);">${formatWaktuLengkap(item.createdAt)}</td><td><a href="https://api.whatsapp.com/send?phone=${cleanWa}" target="_blank" style="color:#10b981; font-weight:700; text-decoration:none; word-break:break-all;"><i class="fab fa-whatsapp"></i> ${escapeHtml(item.wa || '-')}</a></td></tr>`;
+    });
+}
+
+function renderAdminCompanyStats() {
+    let container = document.getElementById('adminCompanyStatsContainer'); if(!container) return; let companyCounts = {};
+    pelamarList.forEach(item => {
+        let posStr = item.posisi || "", ptName = "Lainnya";
+        if(posStr.includes("(") && posStr.includes(")")) { let match = posStr.match(/\(([^)]+)\)/); if(match && match[1]) { ptName = match[1]; } } else { ptName = posStr; }
+        companyCounts[ptName] = (companyCounts[ptName] || 0) + 1;
+    });
+    let keys = Object.keys(companyCounts);
+    if(keys.length === 0) { container.innerHTML = `<p style="color: var(--muted); font-size: 0.85rem; text-align: center;">Belum ada data lamaran masuk ke PT manapun.</p>`; return; }
+    container.innerHTML = "";
+    keys.sort((a, b) => companyCounts[b] - companyCounts[a]).forEach(pt => {
+        container.innerHTML += `<div style="background: var(--bg); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 0.85rem; font-weight: 700; color: var(--text);"><i class="fas fa-building" style="color:var(--primary); margin-right: 6px;"></i> ${escapeHtml(pt)}</span><span style="background: rgba(37,99,235,0.1); color: var(--primary); padding: 4px 10px; border-radius: 8px; font-size: 0.80rem; font-weight: 800;">${companyCounts[pt]} Pelamar</span></div>`;
+    });
+}
+
+function loadProfileToUI() { 
+    document.getElementById('vNama').innerText = userProfile.nama || "Pelamar Baru"; document.getElementById('vKerja').innerText = userProfile.pengalaman || "Belum ada pengalaman"; document.getElementById('vPend').innerText = userProfile.pendidikan || "SMA/SMK"; document.getElementById('vLok').innerText = userProfile.lokasi || "Bandung"; 
+    let a = document.getElementById('vAva');
+    if(userProfile.fotoUrl) { a.style.backgroundImage = `url(${userProfile.fotoUrl})`; a.style.backgroundSize = "cover"; a.style.backgroundPosition = "center"; a.innerHTML = ""; } else { a.style.backgroundImage = ''; a.innerHTML = '<i class="fas fa-user"></i>'; }
+    document.getElementById('iNama').value = userProfile.nama || ""; document.getElementById('iWaPel').value = userProfile.wa || ""; document.getElementById('iPend').value = userProfile.pendidikan || ""; document.getElementById('iPengalaman').value = userProfile.pengalaman || ""; document.getElementById('iLok').value = userProfile.lokasi || "";
+}
+
+async function sProf(){
+    if(!currentAuthUser) { showToast("Silakan login terlebih dahulu!"); return; }
+    let btnSave = document.getElementById('btnSaveProfile'); btnSave.innerText = "Menyimpan..."; btnSave.disabled = true;
+    userProfile.nama = escapeHtml(document.getElementById('iNama').value || "Pelamar Baru"); userProfile.wa = escapeHtml(document.getElementById('iWaPel').value || ""); userProfile.pendidikan = escapeHtml(document.getElementById('iPend').value || "SMA/SMK"); userProfile.pengalaman = escapeHtml(document.getElementById('iPengalaman').value || "Cth: 1 Tahun"); userProfile.lokasi = escapeHtml(document.getElementById('iLok').value || "Bandung");
+    let f = document.getElementById('iFoto').files[0]; 
+    try {
+        if(f){ 
+            const reader = new FileReader();
+            reader.onload = async function(e) { userProfile.fotoUrl = e.target.result; await fbDb.collection("users_profile").doc(currentAuthUser.email).set(userProfile); loadProfileToUI(); document.getElementById('m-pro').checked = false; showToast("✅ Profil & Foto berhasil diperbarui!"); };
+            reader.readAsDataURL(f);
+        } else { await fbDb.collection("users_profile").doc(currentAuthUser.email).set(userProfile); loadProfileToUI(); document.getElementById('m-pro').checked = false; showToast("✅ Profil berhasil diperbarui!"); }
+    } catch (err) { showToast("Gagal menyimpan profil."); } finally { btnSave.innerText = "Simpan"; btnSave.disabled = false; }
+}
+
+function toggleBarayaAiChat() { let chatBox = document.getElementById('barayaAiBox'); let fab = document.getElementById('barayaAiFab'); if (chatBox.style.display === 'flex') { chatBox.style.display = 'none'; fab.style.display = 'flex'; } else { chatBox.style.display = 'flex'; fab.style.display = 'none'; let chatLog = document.getElementById('barayaAiChatLog'); chatLog.scrollTop = chatLog.scrollHeight; document.getElementById('barayaAiInput').focus(); } }
+function handleAiKeyPress(e) { if (e.key === 'Enter') { sendBarayaAiMessage(); } }
+function sendBarayaAiMessage() {
+    let inputEl = document.getElementById('barayaAiInput'); let query = inputEl.value.trim(); if (!query) return;
+    let chatLog = document.getElementById('barayaAiChatLog'); chatLog.innerHTML += `<div class="ai-msg user">${escapeHtml(query)}</div>`; inputEl.value = ""; chatLog.scrollTop = chatLog.scrollHeight;
+    setTimeout(() => { let reply = generateAiResponse(query.toLowerCase()); chatLog.innerHTML += `<div class="ai-msg bot">${reply}</div>`; chatLog.scrollTop = chatLog.scrollHeight; }, 500);
+}
+function generateAiResponse(q) {
+    let matchedJobs = allJobs.filter(j => j.pos.toLowerCase().includes(q) || j.pt.toLowerCase().includes(q) || j.lok.toLowerCase().includes(q) || (j.ind && j.ind.toLowerCase().includes(q)));
+    if (q.includes('halo') || q.includes('hai') || q.includes('pagi') || q.includes('sore')) { return "Halo juga Pejuang Kerja! Ada posisi pekerjaan atau wilayah yang sedang dicari?"; }
+    if (q.includes('tips') || q.includes('interview') || q.includes('wawancara')) { return "Cek menu <b>Tips</b> di bawah untuk panduan lengkap interview!"; }
+    if (matchedJobs.length > 0) {
+        let responseText = `Ditemukan <b>${matchedJobs.length} lowongan</b>:<br><br>`;
+        matchedJobs.slice(0, 3).forEach(j => { responseText += `🔹 <b>${escapeHtml(j.pos)}</b> di <b>${escapeHtml(j.pt)}</b> (${escapeHtml(j.lok)})<br><br>`; });
+        responseText += `Cari di beranda untuk detailnya ya!`; return responseText;
+    }
+    return `Hmm, saya belum menemukan info spesifik. Coba ketik posisi pekerjaan, wilayah, atau "Tips Interview" ya!`;
+}
+</script>
+</body>
+</html>
