@@ -1237,29 +1237,36 @@ async function submitAuthAction() {
             if(!name) { showToast("Nama lengkap wajib diisi!"); return; }
             await fbAuth.createUserWithEmailAndPassword(email, pass);
             userProfile.nama = escapeHtml(name);
-            await fbDb.collection("users_profile").doc(email).set(userProfile);
+            try { await fbDb.collection("users_profile").doc(email).set(userProfile); } catch(e){}
             loadProfileToUI(); 
             document.getElementById('m-auth').checked = false; 
             showToast("🎉 Pendaftaran Berhasil!");
         } else {
+            // 1. Murni autentikasi akun saja
             await fbAuth.signInWithEmailAndPassword(email, pass);
+            document.getElementById('m-auth').checked = false; 
             
             const daftarAdmin = ["barlok@lb.com"];
             if (daftarAdmin.includes(email)) { 
-                document.getElementById('m-auth').checked = false; 
                 document.body.classList.add('admin-mode'); 
                 switchSection('adm'); 
-                showToast("Penyamaran berhasil! Selamat datang Komandan 😎"); 
+                showToast("Selamat datang Komandan 😎"); 
             } else {
-                document.getElementById('m-auth').checked = false; 
                 showToast("👋 Berhasil Masuk Akun Pelamar!");
+            }
+
+            // 2. Muat profil secara terpisah tanpa menggagalkan status login
+            try {
                 await loadUserProfileFromFirestore(email);
+            } catch (errProfile) {
+                console.warn("Gagal memuat profil, tetapi login tetap sukses:", errProfile);
             }
         }
         document.getElementById('authEmailInput').value = ""; 
         document.getElementById('authPassInput').value = ""; 
     } catch (error) { 
-        showToast("Gagal Login: Email/Password salah."); 
+        console.error("Auth Error:", error);
+        showToast("Gagal Login: " + error.message); 
     }
 }
 
