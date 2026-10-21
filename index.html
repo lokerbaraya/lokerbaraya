@@ -731,7 +731,7 @@ body[data-active-sec="home"] .app-footer { display: block; }
 <div id="mod-sort" class="mod-ov"><div class="mbox" style="max-width:320px; padding: 1.5rem 1rem;"><label for="m-sort" class="cx"><i class="fas fa-times"></i></label><h3 style="margin-bottom:15px; font-weight: 800;"><i class="fas fa-sort" style="color:var(--primary)"></i> Urutkan Postingan</h3><div style="display:flex; flex-direction:column;"><div class="opt-item" onclick="selectSort('newest', 'Terbaru (Default)')"><i class="fas fa-fire"></i> Terbaru (Default)</div><div class="opt-item" onclick="selectSort('oldest', 'Terlama')"><i class="fas fa-history"></i> Terlama</div><div class="opt-item" onclick="selectSort('deadline', 'Deadline Terdekat')"><i class="fas fa-clock"></i> Deadline Terdekat</div></div></div></div>
 
 <!-- MODALS LAINNYA -->
-<div id="mod-note" class="mod-ov"><div class="mbox" style="max-width:360px;"><label for="m-note" class="cx"><i class="fas fa-times"></i></label><h2><i class="fas fa-sticky-note" style="color:#f59e0b;"></i> Catatan Pribadi Loker</h2><p id="note-job-title" style="font-size:0.8rem; color:var(--muted); margin-bottom:12px;"></p><input type="hidden" id="noteJobId" value=""><div class="fg"><label>Tulis Catatan / Pengingat:</label><textarea id="noteContentInput" rows="4" placeholder="Contoh: Sudah kirim CV..."></textarea></div><div style="text-align: right; display:flex; gap:8px; justify-content:flex-end;"><button class="btn-rev" onclick="document.getElementById('m-note').checked=false">Batal</button><button class="btn-p" onclick="saveJobNote()">Simpan Catatan</button></div></div></div>
+<div id="mod-note" class="mod-ov"><div class="mbox" style="max-width:360px;"><label for="m-note" class="cx"><i class="fas fa-times"></i></label>2<i class="fas fa-sticky-note" style="color:#f59e0b;"></i> Catatan Pribadi Loker</h2><p id="note-job-title" style="font-size:0.8rem; color:var(--muted); margin-bottom:12px;"></p><input type="hidden" id="noteJobId" value=""><div class="fg"><label>Tulis Catatan / Pengingat:</label><textarea id="noteContentInput" rows="4" placeholder="Contoh: Sudah kirim CV..."></textarea></div><div style="text-align: right; display:flex; gap:8px; justify-content:flex-end;"><button class="btn-rev" onclick="document.getElementById('m-note').checked=false">Batal</button><button class="btn-p" onclick="saveJobNote()">Simpan Catatan</button></div></div></div>
 
 <!-- MODAL KELOLA WEB PT (ADMIN) -->
 <div id="mod-adm-webpt" class="mod-ov">
@@ -1089,21 +1089,22 @@ function loadWebHubList() {
     });
 }
 
-async function setupGlobalStatsRealtimeListener() {
-    try {
-        // Menggunakan count() agar aman tanpa membaca detail data pribadi pelamar
-        const snapshot = await fbDb.collection("pelamar").count().get();
-        let totalPelamar = snapshot.data().count;
+function setupGlobalStatsRealtimeListener() {
+    if(globalStatsListenerUnsubscribe) globalStatsListenerUnsubscribe();
+    globalStatsListenerUnsubscribe = fbDb.collection("pelamar").onSnapshot((snapshot) => {
+        let totalPelamar = snapshot.size;
+        globalPelamarTotalCount = totalPelamar;
         
         let statPubSubmitted = document.getElementById('statPubSubmitted');
         if(statPubSubmitted) statPubSubmitted.innerText = totalPelamar;
         
         let statPubPelamar = document.getElementById('statPubPelamar');
         if(statPubPelamar) statPubPelamar.innerText = totalPelamar; 
-    } catch (e) {
-        console.error("Gagal memuat statistik publik:", e);
-    }
+    }, (error) => {
+        console.error("Gagal mengambil data statistik:", error);
+    });
 }
+
 async function loadUserProfileFromFirestore(email) {
     try {
         const docSnap = await fbDb.collection("users_profile").doc(email).get();
@@ -1119,22 +1120,6 @@ function setupRealtimePelamarListener(email) {
         pelamarList = [];
         snapshot.forEach((doc) => { pelamarList.push({ firebaseId: doc.id, ...doc.data() }); });
         renderDataForUser();
-    });
-}
-
-function setupGlobalStatsRealtimeListener() {
-    if(globalStatsListenerUnsubscribe) globalStatsListenerUnsubscribe();
-    globalStatsListenerUnsubscribe = fbDb.collection("pelamar").onSnapshot((snapshot) => {
-        let totalPelamar = snapshot.size;
-        globalPelamarTotalCount = totalPelamar;
-        
-        let statPubSubmitted = document.getElementById('statPubSubmitted');
-        if(statPubSubmitted) statPubSubmitted.innerText = totalPelamar;
-        
-        let statPubPelamar = document.getElementById('statPubPelamar');
-        if(statPubPelamar) statPubPelamar.innerText = totalPelamar; 
-    }, (error) => {
-        console.error("Gagal mengambil data statistik:", error);
     });
 }
 
@@ -1242,7 +1227,6 @@ async function submitAuthAction() {
             document.getElementById('m-auth').checked = false; 
             showToast("🎉 Pendaftaran Berhasil!");
         } else {
-            // 1. Murni autentikasi akun saja
             await fbAuth.signInWithEmailAndPassword(email, pass);
             document.getElementById('m-auth').checked = false; 
             
@@ -1255,7 +1239,6 @@ async function submitAuthAction() {
                 showToast("👋 Berhasil Masuk Akun Pelamar!");
             }
 
-            // 2. Muat profil secara terpisah tanpa menggagalkan status login
             try {
                 await loadUserProfileFromFirestore(email);
             } catch (errProfile) {
@@ -1315,8 +1298,8 @@ function selectLoc(val, txt) { currentLocFilter = val; document.getElementById('
 function selectType(val, txt) { currentTypeFilter = val; document.getElementById('lbl-type').innerHTML = txt + ' <i class="fas fa-chevron-down"></i>'; document.getElementById('m-type').checked = false; filterJobs(); }
 function selectSort(val, txt) { currentSortFilter = val; document.getElementById('lbl-sort').innerHTML = txt + ' <i class="fas fa-chevron-down"></i>'; document.getElementById('m-sort').checked = false; filterJobs(); }
 
-function openMapsDirect(event, mapsLink, ptName) {
-    event.stopPropagation();
+function openMapsDirect(ev, mapsLink, ptName) {
+    if(ev) ev.stopPropagation();
     let finalUrl = mapsLink ? mapsLink : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ptName + " Bandung Cimahi")}`;
     navigator.clipboard.writeText(finalUrl).then(() => { showToast("📍 Link Google Maps berhasil disalin & dibuka!"); }).catch(() => { showToast("Membuka Peta..."); });
     window.open(finalUrl, '_blank');
@@ -1390,15 +1373,15 @@ function renderJobList() {
         
         let isSaved = savedJobs[j.id] ? true : false; let btnHtml = ''; let targetId = j.firebaseId || j.id;
         if(finalStatusOpen) {
-            if(j.wa) { let copyMsg = generateProfessionalMessage(j.pos, j.pt, 'wa'); btnHtml += `<button class="btn-w" onclick="previewWA('${j.pos.replace(/'/g, "\\'")}', '${j.pt.replace(/'/g, "\\'")}', '${j.wa}')"><i class="fab fa-whatsapp"></i> WA</button><button class="btn-copy" onclick="event.stopPropagation(); navigator.clipboard.writeText('${copyMsg.replace(/'/g, "\\'")}').then(() => showToast('📋 Format pesan WA disalin!'));"><i class="fas fa-copy"></i> Salin</button>`; }
-            if(j.mail) { btnHtml += `<button class="btn-e" onclick="previewMail('${j.mail}', '${j.pos.replace(/'/g, "\\'")}', '${j.pt.replace(/'/g, "\\'")}', '${(j.subjek || '').replace(/'/g, "\\'")}')"><i class="fas fa-envelope"></i> Email</button>`; }
+            if(j.wa) { let copyMsg = generateProfessionalMessage(j.pos, j.pt, 'wa'); btnHtml += `<button class="btn-w" onclick="previewWA('${j.pos.replace(/'/g, "\\'")}', '${j.pt.replace(/'/g, "\\'")}', '${j.wa}', event)"><i class="fab fa-whatsapp"></i> WA</button><button class="btn-copy" onclick="event.stopPropagation(); navigator.clipboard.writeText('${copyMsg.replace(/'/g, "\\'")}').then(() => showToast('📋 Format pesan WA disalin!'));"><i class="fas fa-copy"></i> Salin</button>`; }
+            if(j.mail) { btnHtml += `<button class="btn-e" onclick="previewMail('${j.mail}', '${j.pos.replace(/'/g, "\\'")}', '${j.pt.replace(/'/g, "\\'")}', '${(j.subjek || '').replace(/'/g, "\\'")}', event)"><i class="fas fa-envelope"></i> Email</button>`; }
         } else { btnHtml += `<span style="font-size:0.7rem; color:#ef4444; font-weight:700; align-self:center;"><i class="fas fa-ban"></i> Ditutup</span>`; }
         btnHtml += `<button class="btn-m" style="background:#0ea5e9;" onclick="openMapsDirect(event, '${j.maps || ''}', '${j.pt}')"><i class="fas fa-map-marked-alt"></i> Peta Maps</button>`;
-        btnHtml += `<button class="btn-sh" onclick="shareToWA(event, '${targetId}', '${j.pos}', '${j.pt}', '${j.pend || 'SMA / SMK Sederajat'}')"><i class="fab fa-whatsapp"></i> Share</button><button class="btn-edit-job admin-only" onclick="editJobById('${targetId}')"><i class="fas fa-edit"></i> Edit</button><button class="btn-del-job admin-only" onclick="deleteJobById('${targetId}')"><i class="fas fa-trash"></i> Hapus</button>`;
+        btnHtml += `<button class="btn-sh" onclick="shareToWA(event, '${targetId}', '${j.pos}', '${j.pt}', '${j.pend || 'SMA / SMK Sederajat'}')"><i class="fab fa-whatsapp"></i> Share</button><button class="btn-edit-job admin-only" onclick="editJobById('${targetId}', event)"><i class="fas fa-edit"></i> Edit</button><button class="btn-del-job admin-only" onclick="deleteJobById('${targetId}', event)"><i class="fas fa-trash"></i> Hapus</button>`;
 
         let subjekTag = j.subjek ? `<span class="highlight-tag" style="color: var(--primary); background: rgba(37,99,235,0.08); border-color: rgba(37,99,235,0.2);"><i class="fas fa-envelope-open-text"></i> ${escapeHtml(j.subjek)}</span>` : "";
 
-        container.innerHTML += `<div class="card ${j.isP?'premium':''}" id="job-card-${j.id}" onclick="sDetById('${targetId}')"><button class="bm ${isSaved?'saved':''}" id="bm-${j.id}" onclick="toggleBookmarkById(event, '${targetId}')"><i class="${isSaved?'fas':'far'} fa-bookmark"></i></button><div style="padding-right: 30px; margin-bottom: 4px;"><div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;"><h3>${bPin}${escapeHtml(j.pos)}</h3> ${bFresh} ${bP}</div><div class="pt" style="margin-top:2px;">${escapeHtml(j.pt)} <i class="fas fa-check-circle verif"></i></div></div><div class="card-highlights">${subjekTag}${bCounter}<span class="highlight-tag"><i class="fas fa-graduation-cap" style="color:var(--primary);"></i> ${escapeHtml(j.pend || 'SMA/SMK')}</span><span class="highlight-tag"><i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> ${escapeHtml(j.lok)}</span></div><div class="status-badge-row">${bStatus} ${bDeadline}</div><div style="display:flex; justify-content: flex-end; align-items: center; font-size: 0.72rem; color: var(--muted); margin-bottom: 6px;"><span class="link-det"><i class="fas fa-arrow-right"></i> Detail & Catat</span></div><div class="card-actions-mobile" onclick="event.stopPropagation()">${btnHtml}</div></div>`;
+        container.innerHTML += `<div class="card ${j.isP?'premium':''}" id="job-card-${j.id}" onclick="sDetById('${targetId}', event)"><button class="bm ${isSaved?'saved':''}" id="bm-${j.id}" onclick="toggleBookmarkById(event, '${targetId}')"><i class="${isSaved?'fas':'far'} fa-bookmark"></i></button><div style="padding-right: 30px; margin-bottom: 4px;"><div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;"><h3>${bPin}${escapeHtml(j.pos)}</h3> ${bFresh} ${bP}</div><div class="pt" style="margin-top:2px;">${escapeHtml(j.pt)} <i class="fas fa-check-circle verif"></i></div></div><div class="card-highlights">${subjekTag}${bCounter}<span class="highlight-tag"><i class="fas fa-graduation-cap" style="color:var(--primary);"></i> ${escapeHtml(j.pend || 'SMA/SMK')}</span><span class="highlight-tag"><i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> ${escapeHtml(j.lok)}</span></div><div class="status-badge-row">${bStatus} ${bDeadline}</div><div style="display:flex; justify-content: flex-end; align-items: center; font-size: 0.72rem; color: var(--muted); margin-bottom: 6px;"><span class="link-det"><i class="fas fa-arrow-right"></i> Detail & Catat</span></div><div class="card-actions-mobile" onclick="event.stopPropagation()">${btnHtml}</div></div>`;
     });
     renderPaginationControls(totalPages);
 }
@@ -1541,7 +1524,7 @@ function drawInfoBoxCanvas(ctx, x, y, w, h, title, val) {
 }
 
 function toggleBookmarkById(event, id) { 
-    event.stopPropagation(); let j = allJobs.find(x => x.firebaseId === id || x.id == id); if(!j) return; let k = j.firebaseId || j.id;
+    if(event) event.stopPropagation(); let j = allJobs.find(x => x.firebaseId === id || x.id == id); if(!j) return; let k = j.firebaseId || j.id;
     if(savedJobs[k]){ delete savedJobs[k]; showToast("Loker dihapus dari simpanan."); } else { savedJobs[k] = { ...j, note: "" }; showToast("Loker berhasil disimpan!"); } 
     localStorage.setItem('lb_saved', JSON.stringify(savedJobs)); renderJobList(); renderSavedJobs(); 
 }
@@ -1553,18 +1536,18 @@ function renderSavedJobs() {
     keys.forEach(k => {
         let j = savedJobs[k]; let targetId = j.firebaseId || j.id;
         container.innerHTML += `
-            <div class="card" style="margin-bottom: 12px;" onclick="sDetById('${targetId}')">
+            <div class="card" style="margin-bottom: 12px;" onclick="sDetById('${targetId}', event)">
                 <h3>${escapeHtml(j.pos)}</h3><div class="pt">${escapeHtml(j.pt)}</div><p style="font-size:0.8rem; color:var(--muted); margin: 6px 0;">📍 ${escapeHtml(j.lok)} | 📌 Catatan: ${escapeHtml(j.note) || 'Belum ada catatan'}</p>
                 <div style="display:flex; gap:6px; margin-top:8px;"><button class="btn-note" onclick="openNoteModal(event, '${k}')"><i class="fas fa-sticky-note"></i> Catatan</button><button class="btn-e" onclick="toggleBookmarkById(event, '${targetId}')"><i class="fas fa-trash"></i> Hapus</button></div>
             </div>`;
     });
 }
 
-function openNoteModal(event, id) { event.stopPropagation(); let j = savedJobs[id]; if(!j) return; document.getElementById('noteJobId').value = id; document.getElementById('note-job-title').innerText = `${j.pos} di ${j.pt}`; document.getElementById('noteContentInput').value = j.note || ""; document.getElementById('m-note').checked = true; }
+function openNoteModal(event, id) { if(event) event.stopPropagation(); let j = savedJobs[id]; if(!j) return; document.getElementById('noteJobId').value = id; document.getElementById('note-job-title').innerText = `${j.pos} di ${j.pt}`; document.getElementById('noteContentInput').value = j.note || ""; document.getElementById('m-note').checked = true; }
 function saveJobNote() { let id = document.getElementById('noteJobId').value; let noteText = document.getElementById('noteContentInput').value.trim(); if(savedJobs[id]) { savedJobs[id].note = escapeHtml(noteText); localStorage.setItem('lb_saved', JSON.stringify(savedJobs)); renderSavedJobs(); showToast("Catatan berhasil disimpan!"); } document.getElementById('m-note').checked = false; }
 
 function shareToWA(event, id, pos, pt, pend) { 
-    event.stopPropagation(); let baseUrl = window.location.href.split('?')[0]; let directLink = `${baseUrl}?job=${id}`;
+    if(event) event.stopPropagation(); let baseUrl = window.location.href.split('?')[0]; let directLink = `${baseUrl}?job=${id}`;
     let text = `📢 Informasi Lowongan Kerja\n\n🏢 Perusahaan   : *${pt}*\n👥 Kualifikasi : Pria / Wanita\n👷‍♂ Posisi : *${pos}*\n🎓 Pendidikan : ${pend}\n\n👉 Lihat detail & lamar langsung di sini:\n🔗 ${directLink}`; 
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank'); 
 }
@@ -1575,15 +1558,15 @@ function generateProfessionalMessage(p, c, type = 'wa') {
     else return `Yth. Bapak/Ibu HRD\n${c}\ndi Tempat\n\nDengan hormat,\n\nMelalui informasi lowongan dari LokerBaraya:\n• Nama: ${userProfile.nama}\n• Pendidikan: ${userProfile.pendidikan}\n• Pengalaman: ${userProfile.pengalaman}\n\nDengan ini mengajukan lamaran pekerjaan guna mengisi posisi *${p}* di ${c}.\n\nDemikian surat lamaran ini saya sampaikan. Terima kasih.\n\nHormat saya,\n${userProfile.nama}\nNo. WhatsApp: ${userProfile.wa || '-'}`;
 }
 
-function previewWA(p, c, w){ 
-    event.stopPropagation(); let msg = generateProfessionalMessage(p, c, 'wa'); document.getElementById('previewTextContent').value = msg; 
+function previewWA(p, c, w, ev){ 
+    if(ev) ev.stopPropagation(); let msg = generateProfessionalMessage(p, c, 'wa'); document.getElementById('previewTextContent').value = msg; 
     let formattedWa = w.trim(); if (formattedWa.startsWith('0')) { formattedWa = '62' + formattedWa.substring(1); } else if (!formattedWa.startsWith('62') && !formattedWa.startsWith('+') && formattedWa !== '') { formattedWa = '62' + formattedWa; }
     pendingSendCallback = function() { window.open(`https://api.whatsapp.com/send?phone=${formattedWa}&text=${encodeURIComponent(msg)}`, '_blank'); }; 
     document.getElementById('m-preview').checked = true; 
 }
 
-function previewMail(m, p, c, s){ 
-    event.stopPropagation(); let bodyMsg = generateProfessionalMessage(p, c, 'mail'); document.getElementById('previewTextContent').value = bodyMsg; let subject = s || `Lamaran Pekerjaan - ${p} - ${userProfile.nama}`; 
+function previewMail(m, p, c, s, ev){ 
+    if(ev) ev.stopPropagation(); let bodyMsg = generateProfessionalMessage(p, c, 'mail'); document.getElementById('previewTextContent').value = bodyMsg; let subject = s || `Lamaran Pekerjaan - ${p} - ${userProfile.nama}`; 
     pendingSendCallback = function() { window.open(`mailto:${m}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyMsg)}`, '_blank'); }; document.getElementById('m-preview').checked = true; 
 }
 
@@ -1596,8 +1579,9 @@ function outAdmin() {
     showToast("Berhasil Keluar. Sesi berakhir 🤫"); 
 }
 
-function sDetById(id){
-    let j = allJobs.find(x => x.firebaseId === id || x.id == id || String(x.id) === String(id)); if(!j) return; event.stopPropagation(); currentSelectedJob = j;
+function sDetById(id, ev = null){
+    if(ev) ev.stopPropagation();
+    let j = allJobs.find(x => x.firebaseId === id || x.id == id || String(x.id) === String(id)); if(!j) return; currentSelectedJob = j;
     let bPin = j.isPin ? `<span style="color:#2563eb; margin-right:8px;" title="Disematkan"><i class="fas fa-thumbtack"></i></span>` : "";
     document.getElementById('d-pos').innerHTML = bPin + escapeHtml(j.pos); document.getElementById('d-prem-badge').innerHTML = j.isP ? '<span class="badge-prem"><i class="fas fa-star"></i> PREMIUM</span>' : ''; document.getElementById('d-pt').innerText = j.pt;
     let isExpired = j.deadline ? (new Date(j.deadline).setHours(23,59,59,999) < new Date()) : false; let finalStatusOpen = j.isOpen && !isExpired;
@@ -1615,8 +1599,8 @@ function sDetById(id){
     
     let actHtml = '';
     if(finalStatusOpen) {
-        if(j.wa) actHtml += `<button class="btn-w" onclick="previewWA('${j.pos.replace(/'/g, "\\'")}', '${j.pt.replace(/'/g, "\\'")}', '${j.wa}')"><i class="fab fa-whatsapp"></i> WA</button>`;
-        if(j.mail) actHtml += `<button class="btn-e" onclick="previewMail('${j.mail}', '${j.pos.replace(/'/g, "\\'")}', '${j.pt.replace(/'/g, "\\'")}', '${(j.subjek || '').replace(/'/g, "\\'")}')"><i class="fas fa-envelope"></i> Email</button>`;
+        if(j.wa) actHtml += `<button class="btn-w" onclick="previewWA('${j.pos.replace(/'/g, "\\'")}', '${j.pt.replace(/'/g, "\\'")}', '${j.wa}', event)"><i class="fab fa-whatsapp"></i> WA</button>`;
+        if(j.mail) actHtml += `<button class="btn-e" onclick="previewMail('${j.mail}', '${j.pos.replace(/'/g, "\\'")}', '${j.pt.replace(/'/g, "\\'")}', '${(j.subjek || '').replace(/'/g, "\\'")}', event)"><i class="fas fa-envelope"></i> Email</button>`;
     } else { actHtml += `<span style="font-size:0.8rem; color:#ef4444; font-weight:700;"><i class="fas fa-ban"></i> Lowongan sudah berakhir.</span>`; }
     actHtml += `<button class="btn-m" style="background:#0ea5e9;" onclick="openMapsDirect(event, '${j.maps || ''}', '${j.pt}')"><i class="fas fa-map-marked-alt"></i> Peta Maps</button><button class="btn-sh" onclick="shareToWA(event, '${targetId}', '${j.pos}', '${j.pt}', '${j.pend || 'SMA / SMK Sederajat'}')"><i class="fab fa-whatsapp"></i> Share WA</button>`;
     
@@ -1664,8 +1648,9 @@ async function aJob(){
     document.getElementById('m-post').checked=false; resetJobForm();
 }
 
-function editJobById(id) {
-    event.stopPropagation(); let j = allJobs.find(x => x.firebaseId === id || x.id == id); if(!j) return;
+function editJobById(id, ev = null) {
+    if(ev) ev.stopPropagation(); 
+    let j = allJobs.find(x => x.firebaseId === id || x.id == id); if(!j) return;
     document.getElementById('editJobId').value = j.firebaseId || id; document.getElementById('modal-post-title').innerText = "Edit Loker"; document.getElementById('submitJobBtnText').innerText = "Perbarui Loker"; 
     document.getElementById('jDeadline').value = j.deadline || ""; document.getElementById('jPos').value = j.pos; document.getElementById('jPT').value = j.pt; document.getElementById('jLokasi').value = j.lok; document.getElementById('jType').value = j.type || "Full-time";
     
@@ -1678,7 +1663,12 @@ function editJobById(id) {
     document.getElementById('jPrem').checked = j.isP; document.getElementById('jPin').checked = j.isPin || false; document.getElementById('jIsOpen').checked = j.isOpen === undefined ? true : j.isOpen; document.getElementById('ocrBoxContainer').style.display = "none"; document.getElementById('m-post').checked = true;
 }
 
-async function deleteJobById(id) { event.stopPropagation(); if(confirm("Yakin ingin menghapus loker ini dari Cloud?")) { try { await fbDb.collection("jobs").doc(id).delete(); showToast("Loker berhasil dihapus!"); await fetchJobsFromFirebase(); } catch(err) { showToast("Gagal menghapus dari database."); } } }
+async function deleteJobById(id, ev = null) { 
+    if(ev) ev.stopPropagation(); 
+    if(confirm("Yakin ingin menghapus loker ini dari Cloud?")) { 
+        try { await fbDb.collection("jobs").doc(id).delete(); showToast("Loker berhasil dihapus!"); await fetchJobsFromFirebase(); } catch(err) { showToast("Gagal menghapus dari database."); } 
+    } 
+}
 
 function resetJobForm() {
     document.getElementById('editJobId').value = ''; document.getElementById('ocrBoxContainer').style.display = "block"; document.getElementById('jDeadline').value=''; document.getElementById('jPos').value=''; document.getElementById('jPT').value=''; document.getElementById('jLokasi').value=''; document.getElementById('jDesc').value=''; document.getElementById('jQual').value=''; document.getElementById('jBen').value=''; document.getElementById('jMaps').value=''; document.getElementById('jSubjek').value='';
@@ -1690,6 +1680,16 @@ function exportToCSV(){
     if(pelamarList.length === 0){showToast("Belum ada data pelamar untuk diekspor.");return;}
     let csvContent = "data:text/csv;charset=utf-8,Nama Pelamar,Posisi & PT,Waktu Kirim,No WA\n"; pelamarList.forEach(item => { csvContent += `"${item.nama}","${item.posisi}","${item.createdAt || '-'}","${item.wa || '-'}"\n`; });
     let encodedUri = encodeURI(csvContent); let link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "Data_Pelamar_LokerBaraya.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast("Data CSV berhasil diunduh!");
+}
+
+async function fetchAllPelamarForAdmin() {
+    try {
+        const snap = await fbDb.collection("pelamar").get();
+        pelamarList = [];
+        snap.forEach((doc) => { pelamarList.push({ firebaseId: doc.id, ...doc.data() }); });
+        renderDataForAdmin();
+        renderAdminCompanyStats();
+    } catch(e) { console.error("Gagal load data pelamar admin:", e); }
 }
 
 function renderDataForUser() {
