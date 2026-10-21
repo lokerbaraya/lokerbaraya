@@ -1089,20 +1089,21 @@ function loadWebHubList() {
     });
 }
 
-function setupGlobalStatsRealtimeListener() {
-    if(globalStatsListenerUnsubscribe) globalStatsListenerUnsubscribe();
-    globalStatsListenerUnsubscribe = fbDb.collection("pelamar").onSnapshot((snapshot) => {
-        let totalPelamar = snapshot.size;
-        globalPelamarTotalCount = totalPelamar;
+async function setupGlobalStatsRealtimeListener() {
+    try {
+        // Menggunakan count() agar aman tanpa membaca detail data pribadi pelamar
+        const snapshot = await fbDb.collection("pelamar").count().get();
+        let totalPelamar = snapshot.data().count;
         
         let statPubSubmitted = document.getElementById('statPubSubmitted');
         if(statPubSubmitted) statPubSubmitted.innerText = totalPelamar;
         
         let statPubPelamar = document.getElementById('statPubPelamar');
         if(statPubPelamar) statPubPelamar.innerText = totalPelamar; 
-    });
+    } catch (e) {
+        console.error("Gagal memuat statistik publik:", e);
+    }
 }
-
 async function loadUserProfileFromFirestore(email) {
     try {
         const docSnap = await fbDb.collection("users_profile").doc(email).get();
