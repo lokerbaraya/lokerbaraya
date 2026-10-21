@@ -731,7 +731,7 @@ body[data-active-sec="home"] .app-footer { display: block; }
 <div id="mod-sort" class="mod-ov"><div class="mbox" style="max-width:320px; padding: 1.5rem 1rem;"><label for="m-sort" class="cx"><i class="fas fa-times"></i></label><h3 style="margin-bottom:15px; font-weight: 800;"><i class="fas fa-sort" style="color:var(--primary)"></i> Urutkan Postingan</h3><div style="display:flex; flex-direction:column;"><div class="opt-item" onclick="selectSort('newest', 'Terbaru (Default)')"><i class="fas fa-fire"></i> Terbaru (Default)</div><div class="opt-item" onclick="selectSort('oldest', 'Terlama')"><i class="fas fa-history"></i> Terlama</div><div class="opt-item" onclick="selectSort('deadline', 'Deadline Terdekat')"><i class="fas fa-clock"></i> Deadline Terdekat</div></div></div></div>
 
 <!-- MODALS LAINNYA -->
-<div id="mod-note" class="mod-ov"><div class="mbox" style="max-width:360px;"><label for="m-note" class="cx"><i class="fas fa-times"></i></label>2<i class="fas fa-sticky-note" style="color:#f59e0b;"></i> Catatan Pribadi Loker</h2><p id="note-job-title" style="font-size:0.8rem; color:var(--muted); margin-bottom:12px;"></p><input type="hidden" id="noteJobId" value=""><div class="fg"><label>Tulis Catatan / Pengingat:</label><textarea id="noteContentInput" rows="4" placeholder="Contoh: Sudah kirim CV..."></textarea></div><div style="text-align: right; display:flex; gap:8px; justify-content:flex-end;"><button class="btn-rev" onclick="document.getElementById('m-note').checked=false">Batal</button><button class="btn-p" onclick="saveJobNote()">Simpan Catatan</button></div></div></div>
+<div id="mod-note" class="mod-ov"><div class="mbox" style="max-width:360px;"><label for="m-note" class="cx"><i class="fas fa-times"></i></label><h2><i class="fas fa-sticky-note" style="color:#f59e0b;"></i> Catatan Pribadi Loker</h2><p id="note-job-title" style="font-size:0.8rem; color:var(--muted); margin-bottom:12px;"></p><input type="hidden" id="noteJobId" value=""><div class="fg"><label>Tulis Catatan / Pengingat:</label><textarea id="noteContentInput" rows="4" placeholder="Contoh: Sudah kirim CV..."></textarea></div><div style="text-align: right; display:flex; gap:8px; justify-content:flex-end;"><button class="btn-rev" onclick="document.getElementById('m-note').checked=false">Batal</button><button class="btn-p" onclick="saveJobNote()">Simpan Catatan</button></div></div></div>
 
 <!-- MODAL KELOLA WEB PT (ADMIN) -->
 <div id="mod-adm-webpt" class="mod-ov">
@@ -862,7 +862,7 @@ const randomWelcomeQuotes = [
     "Daripada nungguin chat dari dia yang gak pasti, mending nunggu panggilan interview. Jelas lebih menjanjikan!"
 ];
 
-// FUNGSI PEMBERSIH XSS (SANITASI SANTAI)
+// FUNGSI PEMBERSIH XSS
 function escapeHtml(text) {
     if (!text) return "";
     return String(text)
@@ -985,6 +985,16 @@ async function fetchWebPTFromFirebase() {
     } catch(e) {
         console.error("Gagal load Web PT", e);
     }
+}
+
+async function fetchAllPelamarForAdmin() {
+    try {
+        const snap = await fbDb.collection("pelamar").get();
+        pelamarList = [];
+        snap.forEach((doc) => { pelamarList.push({ firebaseId: doc.id, ...doc.data() }); });
+        renderDataForAdmin();
+        renderAdminCompanyStats();
+    } catch(e) { console.error("Gagal load data pelamar admin:", e); }
 }
 
 async function saveWebPT() {
@@ -1137,7 +1147,7 @@ function updatePublicStats() {
 function requestUserLocation() {
     let statusEl = document.getElementById('userGpsStatus');
     if (!navigator.geolocation) { statusEl.innerText = "Geolocation tidak didukung oleh browser Anda."; return; }
-    statusEl.innerText = "Mendeteksi posisi GPS Anda...";
+    statusEl.innerText = "Mndeteksi posisi GPS Anda...";
     navigator.geolocation.getCurrentPosition(
         (position) => {
             let lat = position.coords.latitude, lon = position.coords.longitude;
@@ -1680,16 +1690,6 @@ function exportToCSV(){
     if(pelamarList.length === 0){showToast("Belum ada data pelamar untuk diekspor.");return;}
     let csvContent = "data:text/csv;charset=utf-8,Nama Pelamar,Posisi & PT,Waktu Kirim,No WA\n"; pelamarList.forEach(item => { csvContent += `"${item.nama}","${item.posisi}","${item.createdAt || '-'}","${item.wa || '-'}"\n`; });
     let encodedUri = encodeURI(csvContent); let link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "Data_Pelamar_LokerBaraya.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link); showToast("Data CSV berhasil diunduh!");
-}
-
-async function fetchAllPelamarForAdmin() {
-    try {
-        const snap = await fbDb.collection("pelamar").get();
-        pelamarList = [];
-        snap.forEach((doc) => { pelamarList.push({ firebaseId: doc.id, ...doc.data() }); });
-        renderDataForAdmin();
-        renderAdminCompanyStats();
-    } catch(e) { console.error("Gagal load data pelamar admin:", e); }
 }
 
 function renderDataForUser() {
