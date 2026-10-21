@@ -1122,13 +1122,20 @@ function setupRealtimePelamarListener(email) {
     });
 }
 
-async function fetchAllPelamarForAdmin() {
-    try {
-        const querySnapshot = await fbDb.collection("pelamar").get();
-        pelamarList = [];
-        querySnapshot.forEach((doc) => { pelamarList.push({ firebaseId: doc.id, ...doc.data() }); });
-        renderDataForAdmin(); renderAdminCompanyStats();
-    } catch (error) { console.error("Gagal memuat seluruh data pelamar admin:", error); }
+function setupGlobalStatsRealtimeListener() {
+    if(globalStatsListenerUnsubscribe) globalStatsListenerUnsubscribe();
+    globalStatsListenerUnsubscribe = fbDb.collection("pelamar").onSnapshot((snapshot) => {
+        let totalPelamar = snapshot.size;
+        globalPelamarTotalCount = totalPelamar;
+        
+        let statPubSubmitted = document.getElementById('statPubSubmitted');
+        if(statPubSubmitted) statPubSubmitted.innerText = totalPelamar;
+        
+        let statPubPelamar = document.getElementById('statPubPelamar');
+        if(statPubPelamar) statPubPelamar.innerText = totalPelamar; 
+    }, (error) => {
+        console.error("Gagal mengambil data statistik:", error);
+    });
 }
 
 function updatePublicStats() {
